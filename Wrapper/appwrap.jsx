@@ -16,7 +16,7 @@ const AppWrap = (Component, idName) =>
         alignItems="flex-end"
         justifyContent="space-between"
         w="100%"
-        h={laptopView ? "650px" : "auto"}
+        h={laptopView ? "620px" : "auto"}
       >
         <Box w={laptopView ? "5%" : "10%"}>
           <Socials />

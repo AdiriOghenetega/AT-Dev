@@ -36,12 +36,12 @@ const About = () => {
       return <ChakraBox
       display="flex"
       flexDirection={laptopView ? "row":"column"}
-        p={laptopView ? "6em 2em":"6em 1em"}
+        p={laptopView ? "1em 2em":"6em 1em"}
         w="100%"
         h={laptopView ? "550px":"auto"}
         fontFamily="Space Grotesk"
         justifyContent="space-around"
-        alignItems="center"
+       alignItems={mobileView && "center"}
         key={_id}
         marginTop={laptopView ? "0":"1em"}
        
