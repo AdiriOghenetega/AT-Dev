@@ -63,7 +63,7 @@ const Carousel = ({ work }) => {
       {work?.length && (
         <Box
           bg={containerColor}
-          w={laptopView ? "300px" : "230px"}
+          w={laptopView ? "300px" : "250px"}
           h={laptopView ? "400px" : "auto"}
           m="1em"
           p="1em"
@@ -73,7 +73,7 @@ const Carousel = ({ work }) => {
           <Box>
             <img
               src={urlFor(work[currentIndex].imgUrl)
-                .width(laptopView ? 300 : 230)
+                .width(laptopView ? 300 : 260)
                 .height(200)
                 .url()}
               alt="project"

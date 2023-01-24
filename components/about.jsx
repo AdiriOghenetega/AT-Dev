@@ -65,7 +65,7 @@ const About = () => {
           x: [-20, 0],
         }}
         transition={{
-          duration:"1"
+          duration: .5
         }}
       >
         <Text fontWeight="black" fontSize={laptopView ? "1.5em":"1.35em"}>
@@ -94,7 +94,7 @@ const About = () => {
           initial={{ scale: 1 }}
           whileInView={{ scale:[ 1.2,1] }}
           whileHover={{ scale: 1.1 }}
-          transition={{ duration: 1 }}
+          transition={{ duration: .5 }}
           w={laptopView ? "350px":"250px"}
           h={laptopView ? "350px" : "250px"}
           bg="gray.300"
@@ -107,9 +107,9 @@ const About = () => {
           h={laptopView ? "250px":"200pxc"}
           borderRadius="50px"
           initial={{ scale: 1, filter: "grayscale(100%)" }}
-          whileInView={{ scale: 1.2, filter: "grayscale(0%)" }}
-          whileHover={{ scale: 1.2, filter: "grayscale(0%)" }}
-          transition={{ duration: 1 }}
+          whileInView={{ scale: 1.2, filter: "grayscale(20%)" }}
+          whileHover={{ scale: 1, filter: "grayscale(100%)" }}
+          transition={{ duration: .5 }}
         >
           <img src={urlFor(imgUrl)} alt="user" />
         </ChakraBox>
