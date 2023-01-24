@@ -51,6 +51,7 @@ const Skills = () => {
                 alignItems="center"
                 justifyContent="center"
                 marginTop="1em"
+                
               >
                 <Box
                   bg={bgColor}
@@ -58,6 +59,7 @@ const Skills = () => {
                   h="60px"
                   borderRadius="8px"
                   boxShadow="0 0 25px rgba(0,0,0,0.2)"
+                  p="2"
                 >
                   <img src={urlFor(icon)} alt="icons" />
                 </Box>
