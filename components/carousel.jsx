@@ -64,11 +64,12 @@ const Carousel = ({ work }) => {
         <Box
           bg={containerColor}
           w={laptopView ? "300px" : "250px"}
-          h={laptopView ? "400px" : "auto"}
+          h={laptopView ? "410px" : "auto"}
           m="1em"
-          p="1em"
+          boxShadow = "0 0 25px rgba(0,0,0,0.2)"
           borderRadius="1em"
           position="relative"
+          overflow="hidden"
         >
           <Box>
             <img
@@ -79,7 +80,7 @@ const Carousel = ({ work }) => {
               alt="project"
             />
           </Box>
-          <Box>
+          <Box p="0 1em 1em">
             <Box fontWeight="black" textAlign="center" p="2">
               <Text>{work[currentIndex].title}</Text>
             </Box>
@@ -117,7 +118,7 @@ const Carousel = ({ work }) => {
               color="blue.400"
               _hover={{ boxShadow: "0 0 25px rgba(0,0,0,0.2)" }}
             >
-              <a href={work[currentIndex].projectLink} target="blank">
+              <a href={work[currentIndex].projectLink} target="_blank">
                 <Icon
                   as={AiOutlineEye}
                   bgColor="transparent"
@@ -129,7 +130,7 @@ const Carousel = ({ work }) => {
                   }}
                 />
               </a>
-              <a href={work[currentIndex].codeLink} target="blank">
+              <a href={work[currentIndex].codeLink} target="_blank">
                 <Icon
                   as={AiFillGithub}
                   bgColor="transparent"

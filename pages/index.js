@@ -54,6 +54,7 @@ export async function getStaticProps() {
       skill: skills,
       experience: experiences,
       work:works,
-    }
+    },
+     revalidate: 10,
   };
 }
