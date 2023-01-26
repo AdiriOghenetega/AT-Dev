@@ -47,7 +47,7 @@ const Skills = () => {
               <Flex
                 key={_id}
                 direction="column"
-                m="4"
+                m="2"
                 alignItems="center"
                 justifyContent="center"
                 marginTop="1em"
