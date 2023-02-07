@@ -78,7 +78,7 @@ const About = () => {
             href={resume}
             target="_blank"
           passHref>
-        <Button m="0 3px" p="1em" w={laptopView ? "90%":"95%"}>
+        <Button marginTop="0.5em" p="1em" w={laptopView ? "99%":"98%"}>
             my resume
         </Button>
         </a>
