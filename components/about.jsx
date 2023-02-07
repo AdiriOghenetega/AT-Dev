@@ -52,17 +52,12 @@ const About = () => {
         h={laptopView ? "300px":"auto"}
         display="flex"
         flexDirection="column"
-        
         borderRadius="10px"
         boxShadow="0 0 25px rgba(0,0,0,0.2)"
-        direction="column"
         p="1em"
         initial={{x:0}}
         whileInView={{
           x: [-30, 0],
-        }}
-        whileHover={{
-          x: [-20, 0],
         }}
         transition={{
           duration: .5
@@ -79,14 +74,14 @@ const About = () => {
         <Text fontSize="1.331em" marginTop="0.3em">
           {description}
         </Text>
-        <Button m="3" p="1em">
-          <a
+        <a
             href={resume}
-            target="blank"
-          >
+            target="_blank"
+          passHref>
+        <Button m="0 3px" p="1em" w={laptopView ? "90%":"95%"}>
             my resume
-          </a>
         </Button>
+        </a>
       </ChakraBox>
       <Flex alignItems="center" justifyContent="center" zIndex="1" marginTop={laptopView ? "0":"2em"} >
         <ChakraBox
@@ -95,8 +90,8 @@ const About = () => {
           whileInView={{ scale:[ 1.2,1] }}
           whileHover={{ scale: 1.1 }}
           transition={{ duration: .5 }}
-          w={laptopView ? "350px":"250px"}
-          h={laptopView ? "350px" : "250px"}
+          w={laptopView ? "300px":"230px"}
+          h={laptopView ? "300px" : "230px"}
           bg="gray.300"
           borderRadius="70px 30px 150px 100px"
         ></ChakraBox>
