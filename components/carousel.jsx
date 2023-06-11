@@ -73,10 +73,7 @@ const Carousel = ({ work }) => {
         >
           <Box>
             <img
-              src={urlFor(work[currentIndex].imgUrl)
-                .width(laptopView ? 400 : 260)
-                .height(200)
-                .url()}
+              src={urlFor(work[currentIndex].imgUrl).width(laptopView ? 400 : 260).height(200).url()}
               alt="project"
             />
           </Box>
@@ -101,7 +98,7 @@ const Carousel = ({ work }) => {
                   <Box
                     key={index}
                     fontWeight="black"
-                    fontSize={mobileView && "0.8em"}
+                    fontSize={mobileView && "0.6em"}
                   >
                     {tech}
                   </Box>

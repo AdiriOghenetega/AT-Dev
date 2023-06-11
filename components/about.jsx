@@ -38,7 +38,7 @@ const About = () => {
       flexDirection={laptopView ? "row":"column"}
         p={laptopView ? "1em 2em":"6em 1em"}
         w="100%"
-        h={laptopView ? "550px":"auto"}
+        h={laptopView ? "600px":"auto"}
         fontFamily="Space Grotesk"
         justifyContent="space-around"
        alignItems={mobileView && "center"}

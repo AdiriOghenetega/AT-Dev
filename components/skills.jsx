@@ -28,7 +28,7 @@ const Skills = () => {
       direction="column"
       fontFamily="Space Grotesk"
       alignItems="center"
-    
+      marginBottom={"2em"}
       fontWeight="black"
       marginTop={mobileView && "2em"}
     >

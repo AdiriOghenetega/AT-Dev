@@ -20,7 +20,7 @@ const Projects = () => {
       fontFamily="Space Grotesk"
       alignItems="center"
       justifyContent="space-between"
-      marginTop={mobileView && "2em"}
+      marginTop={"2em"}
       fontWeight="black"
     >
       <Box>
