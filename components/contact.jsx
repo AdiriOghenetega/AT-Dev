@@ -69,7 +69,7 @@ function Contact() {
   return (
     <Flex
       w="100%"
-      h={laptopView ? "600px" : "auto"}
+      h={laptopView ? "500px" : "auto"}
       direction="column"
       fontFamily="Space Grotesk"
       alignItems="center"

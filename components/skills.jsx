@@ -24,7 +24,7 @@ const Skills = () => {
   return (
     <Flex
       w="100%"
-      h={laptopView ? "550px" : "auto"}
+      h={laptopView ? "450px" : "auto"}
       direction="column"
       fontFamily="Space Grotesk"
       alignItems="center"

@@ -15,16 +15,16 @@ const Projects = () => {
   return (
     <Flex
       w="100%"
-      h={laptopView ? "550px" : "auto"}
+      h={laptopView ? "500px" : "auto"}
       direction="column"
       fontFamily="Space Grotesk"
       alignItems="center"
       justifyContent="space-between"
-      marginTop={"2em"}
       fontWeight="black"
+      marginTop={"2em"}
     >
       <Box>
-        <Text fontSize={laptopView ? "2em" : "1.5em"}>Projects</Text>
+        <Text marginBottom={"0.5em"} fontSize={laptopView ? "2em" : "1.5em"}>Projects</Text>
       </Box>
       <Flex
         w="100%"
