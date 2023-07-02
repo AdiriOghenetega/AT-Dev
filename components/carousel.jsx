@@ -64,26 +64,27 @@ const Carousel = ({ work }) => {
         <Box
           bg={containerColor}
           w={laptopView ? "400px" : "250px"}
-          h={laptopView ? "410px" : "auto"}
+          h={laptopView ? "450px" : "auto"}
           m="1em"
+          
           boxShadow = "0 0 25px rgba(0,0,0,0.2)"
           borderRadius="1em"
           position="relative"
           overflow="hidden"
         >
-          <Box>
+          <Box borderRadius="1em" overflow="hidden">
             <img
-              src={urlFor(work[currentIndex].imgUrl).width(laptopView ? 400 : 260).height(200).url()}
+              src={urlFor(work[currentIndex].imgUrl).width(laptopView ? 400 : 260).height(250).url()}
               alt="project"
             />
           </Box>
           <Box p="0 1em 1em">
-            <Box fontWeight="black" textAlign="center" p="2">
-              <Text>{work[currentIndex].title}</Text>
+            <Box fontWeight="black" textAlign="center" p="2" >
+              <Text fontSize={"large"}>{work[currentIndex].title}</Text>
             </Box>
 
             <Box>
-              <Text fontSize="1em" textAlign="center" p="2">
+              <Text fontSize="small" textAlign="center" p="2">
                 {work[currentIndex].description}
               </Text>
             </Box>
