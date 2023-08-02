@@ -10,8 +10,9 @@ import {
   chakra,
   shouldForwardProp,
   useMediaQuery,
+  Tooltip,
 } from "@chakra-ui/react";
-import { AiFillGithub, AiOutlineEye } from "react-icons/ai";
+import { AiFillGithub, AiOutlineEye,AiOutlineDownload } from "react-icons/ai";
 import { motion, isValidMotionProp, useAnimation } from "framer-motion";
 
 const ChakraBox = chakra(motion.div, {
@@ -45,6 +46,7 @@ const Carousel = ({ work }) => {
     "(min-width: 601px)",
   ]);
 
+
   return (
     <ChakraBox
       display="flex"
@@ -66,20 +68,22 @@ const Carousel = ({ work }) => {
           w={laptopView ? "400px" : "250px"}
           h={laptopView ? "450px" : "auto"}
           m="1em"
-          
-          boxShadow = "0 0 25px rgba(0,0,0,0.2)"
+          boxShadow="0 0 25px rgba(0,0,0,0.2)"
           borderRadius="1em"
           position="relative"
           overflow="hidden"
         >
           <Box borderRadius="1em" overflow="hidden">
             <img
-              src={urlFor(work[currentIndex].imgUrl).width(laptopView ? 400 : 260).height(250).url()}
+              src={urlFor(work[currentIndex].imgUrl)
+                .width(laptopView ? 400 : 260)
+                .height(250)
+                .url()}
               alt="project"
             />
           </Box>
           <Box p="0 1em 1em">
-            <Box fontWeight="black" textAlign="center" p="2" >
+            <Box fontWeight="black" textAlign="center" p="2">
               <Text fontSize={"large"}>{work[currentIndex].title}</Text>
             </Box>
 
@@ -116,30 +120,44 @@ const Carousel = ({ work }) => {
               color="blue.400"
               _hover={{ boxShadow: "0 0 25px rgba(0,0,0,0.2)" }}
             >
-              <a href={work[currentIndex].projectLink} target="_blank">
-                <Icon
-                  as={AiOutlineEye}
-                  bgColor="transparent"
-                  size="25px"
-                  marginTop="2"
-                  _hover={{
-                    color: hoverColor,
-                    boxShadow: "0 0 25px rgba(0,0,0,0.2)",
-                  }}
-                />
-              </a>
-              <a href={work[currentIndex].codeLink} target="_blank">
-                <Icon
-                  as={AiFillGithub}
-                  bgColor="transparent"
-                  size="25px"
-                  marginTop="2"
-                  _hover={{
-                    color: hoverColor,
-                    boxShadow: "0 0 25px rgba(0,0,0,0.2)",
-                  }}
-                />
-              </a>
+              <Tooltip
+                label={work[currentIndex].tags?.includes("mobile") ? "download app":"view website"}
+                bg="gray.700"
+                color="white"
+                placement="bottom"
+              >
+                <a href={work[currentIndex].projectLink} target="_blank">
+                  <Icon
+                    as={work[currentIndex].tags?.includes("mobile") ? AiOutlineDownload:AiOutlineEye}
+                    bgColor="transparent"
+                    size="25px"
+                    marginTop="2"
+                    _hover={{
+                      color: hoverColor,
+                      boxShadow: "0 0 25px rgba(0,0,0,0.2)",
+                    }}
+                  />
+                </a>
+              </Tooltip>
+              <Tooltip
+                label="view code"
+                bg="gray.700"
+                color="white"
+                placement="bottom"
+              >
+                <a href={work[currentIndex].codeLink} target="_blank">
+                  <Icon
+                    as={AiFillGithub}
+                    bgColor="transparent"
+                    size="25px"
+                    marginTop="2"
+                    _hover={{
+                      color: hoverColor,
+                      boxShadow: "0 0 25px rgba(0,0,0,0.2)",
+                    }}
+                  />
+                </a>
+              </Tooltip>
             </Flex>
           </Box>
         </Box>

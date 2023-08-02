@@ -13,10 +13,10 @@ const AppWrap = (Component, idName) =>
     return (
       <Flex
         id={idName}
-        alignItems="flex-end"
+        alignItems="center"
         justifyContent="space-between"
         w="100%"
-        h={laptopView ? "620px" : "auto"}
+        h={laptopView ? "100vh" : "auto"}
       >
         <Box w={laptopView ? "5%" : "10%"}>
           <Socials />

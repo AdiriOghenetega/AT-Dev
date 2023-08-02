@@ -21,7 +21,6 @@ const Projects = () => {
       alignItems="center"
       justifyContent="space-between"
       fontWeight="black"
-      marginTop={"2em"}
     >
       <Box>
         <Text marginBottom={"0.5em"} fontSize={laptopView ? "2em" : "1.5em"}>Projects</Text>
