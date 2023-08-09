@@ -21,6 +21,8 @@ const ChakraBox = chakra(motion.div, {
 });
 
 const Carousel = ({ work }) => {
+  const projects = work?.reverse()
+  
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const hoverColor = useColorModeValue("black", "white");
@@ -62,7 +64,7 @@ const Carousel = ({ work }) => {
       }}
       animate={control}
     >
-      {work?.length && (
+      {projects?.length && (
         <Box
           bg={containerColor}
           w={laptopView ? "400px" : "250px"}
@@ -75,7 +77,7 @@ const Carousel = ({ work }) => {
         >
           <Box borderRadius="1em" overflow="hidden">
             <img
-              src={urlFor(work[currentIndex].imgUrl)
+              src={urlFor(projects[currentIndex].imgUrl)
                 .width(laptopView ? 400 : 260)
                 .height(250)
                 .url()}
@@ -84,12 +86,12 @@ const Carousel = ({ work }) => {
           </Box>
           <Box p="0 1em 1em">
             <Box fontWeight="black" textAlign="center" p="2">
-              <Text fontSize={"large"}>{work[currentIndex].title}</Text>
+              <Text fontSize={"large"}>{projects[currentIndex].title}</Text>
             </Box>
 
             <Box>
               <Text fontSize="small" textAlign="center" p="2">
-                {work[currentIndex].description}
+                {projects[currentIndex].description}
               </Text>
             </Box>
             <Flex
@@ -98,7 +100,7 @@ const Carousel = ({ work }) => {
               alignItems="center"
               justifyContent="space-around"
             >
-              {work[currentIndex].techs?.map((tech, index) => {
+              {projects[currentIndex].techs?.map((tech, index) => {
                 return (
                   <Box
                     key={index}
@@ -121,14 +123,14 @@ const Carousel = ({ work }) => {
               _hover={{ boxShadow: "0 0 25px rgba(0,0,0,0.2)" }}
             >
               <Tooltip
-                label={work[currentIndex].tags?.includes("mobile") ? "download app":"view website"}
+                label={projects[currentIndex].tags?.includes("mobile") ? "download apk":"view website"}
                 bg="gray.700"
                 color="white"
                 placement="bottom"
               >
-                <a href={work[currentIndex].projectLink} target="_blank">
+                <a href={projects[currentIndex].projectLink} target="_blank">
                   <Icon
-                    as={work[currentIndex].tags?.includes("mobile") ? AiOutlineDownload:AiOutlineEye}
+                    as={projects[currentIndex].tags?.includes("mobile") ? AiOutlineDownload:AiOutlineEye}
                     bgColor="transparent"
                     size="25px"
                     marginTop="2"
@@ -145,7 +147,7 @@ const Carousel = ({ work }) => {
                 color="white"
                 placement="bottom"
               >
-                <a href={work[currentIndex].codeLink} target="_blank">
+                <a href={projects[currentIndex].codeLink} target="_blank">
                   <Icon
                     as={AiFillGithub}
                     bgColor="transparent"
@@ -174,7 +176,7 @@ const Carousel = ({ work }) => {
           color="blue.400"
           _hover={{ boxShadow: "0 0 25px rgba(0,0,0,0.2)" }}
           onClick={() =>
-            handleClick(currentIndex === 0 ? work.length - 1 : currentIndex - 1)
+            handleClick(currentIndex === 0 ? projects.length - 1 : currentIndex - 1)
           }
         >
           <Icon
@@ -197,7 +199,7 @@ const Carousel = ({ work }) => {
           color="blue.400"
           _hover={{ boxShadow: "0 0 25px rgba(0,0,0,0.2)" }}
           onClick={() =>
-            handleClick(currentIndex === work.length - 1 ? 0 : currentIndex + 1)
+            handleClick(currentIndex === projects.length - 1 ? 0 : currentIndex + 1)
           }
         >
           <Icon
