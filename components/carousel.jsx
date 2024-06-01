@@ -22,7 +22,7 @@ const ChakraBox = chakra(motion.div, {
 
 const Carousel = ({ work }) => {
   const projects = work?.reverse()
-  
+  console.log(projects)
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const hoverColor = useColorModeValue("black", "white");
