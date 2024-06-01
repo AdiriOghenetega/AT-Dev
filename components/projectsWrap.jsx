@@ -23,7 +23,7 @@ const ChakraBox = chakra(motion.div, {
 const ProjectsWrap = ({ work,category}) => {
 
   const [projects, setProjects] = useState(work?.reverse());
-  console.log(projects)
+
 
   useEffect(() => {
     const mobileFiltered = work?.filter((project) => project.tags?.includes('mobile'));
@@ -101,19 +101,41 @@ const ProjectsWrap = ({ work,category}) => {
                       {project.description}
                     </Text>
                   </Box>
+                 {project.features && <Flex
+                    w="100%"
+                    p={"1"}
+                    alignItems="center"
+                    justifyContent="space-around"
+                  >
+                    <Text w={"30%"} fontSize={"0.7em"}>Features : </Text>
+                    <Box w={"65%"}>
+                    {project.features?.map((tech, index) => {
+                      return (
+                        <Box key={index} fontWeight="black" fontSize={"0.7em"} bg="rgb(54,60,71,.2)" p="1"
+                        borderRadius="0.5em" my="1">
+                          {tech}
+                        </Box>
+                      );
+                    })}
+                    </Box>
+                  </Flex>}
                   <Flex
                     w="100%"
                     p={"1"}
                     alignItems="center"
                     justifyContent="space-around"
                   >
+                    <Text  w={"30%"}  fontSize={"0.7em"}>Tech Stack : </Text>
+                    <Box w={"65%"}>
                     {project.techs?.map((tech, index) => {
                       return (
-                        <Box key={index} fontWeight="black" fontSize={"0.6em"}>
+                        <Box key={index} fontWeight="black" fontSize={"0.7em"} bg="rgb(54,60,71,.2)" p="1"
+                        borderRadius="0.5em" my="1">
                           {tech}
                         </Box>
                       );
                     })}
+                    </Box>
                   </Flex>
                   <Flex
                     w="100%"
