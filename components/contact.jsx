@@ -129,7 +129,7 @@ function Contact() {
           </Box>
         </Flex>
       </Flex>
-      {submitted ? (
+      {/* {submitted ? (
         <Box p="2em">
           <Text fontSize={laptopView ? "1.5em" : "1em"}>
             Thanks for contacting me, will get back to you shortly
@@ -170,7 +170,7 @@ function Contact() {
             </Button>
           </Flex>
         </form>
-      )}
+      )} */}
     </Flex>
   );
 }

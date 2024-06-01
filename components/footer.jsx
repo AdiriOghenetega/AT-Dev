@@ -13,6 +13,7 @@ const Footer = () => {
     marginTop="2em"
    >
     <Text fontSize="10px">&copy; Adiri Oghenetega</Text>
+    <Text fontSize="10px">Built with NextJs,Chakra UI,Sanity.io & ❤️</Text>
    </Box>
   )
 }
