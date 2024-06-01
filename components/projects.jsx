@@ -23,7 +23,7 @@ const Projects = () => {
   return (
     <Flex
       w="100%"
-      h={laptopView ? "500px" : "auto"}
+      h={"auto"}
       direction="column"
       fontFamily="Space Grotesk"
       alignItems="center"
