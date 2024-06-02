@@ -28,9 +28,7 @@ const Skills = () => {
       direction="column"
       fontFamily="Space Grotesk"
       alignItems="center"
-      marginBottom={"2em"}
       fontWeight="black"
-      marginTop={mobileView ? "2em" : "6em"}
     >
       <Text fontSize={laptopView ? "2em" : "1.5em"}>Skills & Experience</Text>
       <Flex w="100%" marginTop="2em" direction={laptopView ? "row" : "column"}>

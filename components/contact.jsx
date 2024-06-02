@@ -69,13 +69,12 @@ function Contact() {
   return (
     <Flex
       w="100%"
-      h={laptopView ? "500px" : "auto"}
+      h={"auto"}
       direction="column"
       fontFamily="Space Grotesk"
       alignItems="center"
       justifyContent="center"
       fontWeight="black"
-      marginTop={mobileView && "2em"}
     >
       <Text fontSize={laptopView ? "2em" : "1.5em"}>Contact Me</Text>
       <Flex
