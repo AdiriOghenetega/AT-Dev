@@ -17,6 +17,7 @@ const AppWrap = (Component, idName) =>
         justifyContent="space-between"
         w="100%"
         h={"auto"}
+        minHeight={laptopView ? "100vh":"auto"}
       >
         <Box w={laptopView ? "5%" : "10%"}>
           <Socials />
