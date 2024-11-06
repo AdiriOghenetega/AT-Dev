@@ -13,6 +13,7 @@ import { motion, isValidMotionProp } from "framer-motion";
 import { UserContext } from "@/pages";
 import { urlFor } from "@/pages";
 
+
 const ChakraBox = chakra(motion.div, {
   shouldForwardProp: (prop) =>
     isValidMotionProp(prop) || shouldForwardProp(prop),
@@ -54,7 +55,7 @@ const About = () => {
               p="1em"
               initial={{ x: 0 }}
               whileInView={{
-                x: [-30, 0],
+                x: [-100, 0],
               }}
               transition={{
                 duration: 0.5,

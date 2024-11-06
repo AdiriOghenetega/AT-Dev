@@ -12,6 +12,7 @@ import {
 import { AppWrap } from "@/Wrapper";
 import Image from "next/image";
 import emailjs from "@emailjs/browser";
+import SlideIn from "@/customComponents/slideIn";
 
 function Contact() {
   const containerColor = useColorModeValue(
@@ -76,57 +77,63 @@ function Contact() {
       justifyContent="center"
       fontWeight="black"
     >
-      <Text fontSize={laptopView ? "2em" : "1.5em"}>Contact Me</Text>
+      <SlideIn direction={"up"}>
+        <Text fontSize={laptopView ? "2em" : "1.5em"}>Contact Me</Text>
+      </SlideIn>
       <Flex
-        w={laptopView ? "500px":"auto"}
+        w={laptopView ? "500px" : "auto"}
         h={laptopView ? "auto" : "10em"}
         alignItems="center"
         justifyContent="space-between"
         marginTop="2em"
         direction={laptopView ? "row" : "column"}
       >
-        <Flex
-          w="220px"
-          alignItems="center"
-          justifyContent="space-between"
-          bg={containerColor}
-          p="1em"
-          borderRadius="0.5em"
-          boxShadow="0 0 25px rgba(0,0,0,0.2)"
-        >
-          <Box w="40px" h="40px" position="relative">
-            <Image
-              src="/email.png"
-              alt="email"
-              fill
-              sizes="(max-width:345px) 20px,(max-width:600px) 30px,(max-width:1023px) 40px,1000px"
-            />
-          </Box>
-          <Box fontSize="13px">
-            <a href="mailto:adiritega@gmail.com">adiritega@gmail.com</a>
-          </Box>
-        </Flex>
-        <Flex
-          w="215px"
-          alignItems="center"
-          justifyContent="space-between"
-          bg={containerColor}
-          p="1em"
-          borderRadius="0.5em"
-          boxShadow="0 0 25px rgba(0,0,0,0.2)"
-        >
-          <Box w="40px" h="40px" position="relative">
-            <Image
-              src="/mobile.png"
-              alt="mobile"
-              fill
-              sizes="(max-width:345px) 20px,(max-width:600px) 30px,(max-width:1023px) 40px,1000px"
-            />
-          </Box>
-          <Box fontSize="13px">
-            <a href="tel:+2348142604385">+234(814) 260-4385</a>
-          </Box>
-        </Flex>
+        <SlideIn direction={"left"}>
+          <Flex
+            w="220px"
+            alignItems="center"
+            justifyContent="space-between"
+            bg={containerColor}
+            p="1em"
+            borderRadius="0.5em"
+            boxShadow="0 0 25px rgba(0,0,0,0.2)"
+          >
+            <Box w="40px" h="40px" position="relative">
+              <Image
+                src="/email.png"
+                alt="email"
+                fill
+                sizes="(max-width:345px) 20px,(max-width:600px) 30px,(max-width:1023px) 40px,1000px"
+              />
+            </Box>
+            <Box fontSize="13px">
+              <a href="mailto:adiritega@gmail.com">adiritega@gmail.com</a>
+            </Box>
+          </Flex>
+        </SlideIn>
+        <SlideIn direction={"right"}>
+          <Flex
+            w="215px"
+            alignItems="center"
+            justifyContent="space-between"
+            bg={containerColor}
+            p="1em"
+            borderRadius="0.5em"
+            boxShadow="0 0 25px rgba(0,0,0,0.2)"
+          >
+            <Box w="40px" h="40px" position="relative">
+              <Image
+                src="/mobile.png"
+                alt="mobile"
+                fill
+                sizes="(max-width:345px) 20px,(max-width:600px) 30px,(max-width:1023px) 40px,1000px"
+              />
+            </Box>
+            <Box fontSize="13px">
+              <a href="tel:+2348142604385">+234(814) 260-4385</a>
+            </Box>
+          </Flex>
+        </SlideIn>
       </Flex>
       {/* {submitted ? (
         <Box p="2em">

@@ -14,6 +14,7 @@ import {
 import { AppWrap } from "@/Wrapper";
 import { UserContext } from "@/pages";
 import { urlFor } from "@/pages";
+import SlideIn from "@/customComponents/slideIn";
 
 const Skills = () => {
   const { skill, experience } = useContext(UserContext);
@@ -30,7 +31,9 @@ const Skills = () => {
       alignItems="center"
       fontWeight="black"
     >
-      <Text fontSize={laptopView ? "2em" : "1.5em"}>Skills & Experience</Text>
+      <SlideIn direction={"up"}>
+        <Text fontSize={laptopView ? "2em" : "1.5em"}>Skills & Experience</Text>
+      </SlideIn>
       <Flex w="100%" marginTop="2em" direction={laptopView ? "row" : "column"}>
         <Flex
           flexWrap="wrap"
@@ -42,28 +45,30 @@ const Skills = () => {
           {skill?.map((data) => {
             const { icon, bgColor, name, _id } = data;
             return (
-              <Flex
-                key={_id}
-                direction="column"
-                m="2"
-                alignItems="center"
-                justifyContent="center"
-                marginTop="1em"
-              >
-                <Box
-                  bg={bgColor}
-                  w="60px"
-                  h="60px"
-                  borderRadius="8px"
-                  boxShadow="0 0 25px rgba(0,0,0,0.2)"
-                  p="2"
+              <SlideIn direction={"left"}>
+                <Flex
+                  key={_id}
+                  direction="column"
+                  m="2"
+                  alignItems="center"
+                  justifyContent="center"
+                  marginTop="1em"
                 >
-                  <img src={urlFor(icon)} alt="icons" />
-                </Box>
-                <Box>
-                  <Text>{name}</Text>
-                </Box>
-              </Flex>
+                  <Box
+                    bg={bgColor}
+                    w="60px"
+                    h="60px"
+                    borderRadius="8px"
+                    boxShadow="0 0 25px rgba(0,0,0,0.2)"
+                    p="2"
+                  >
+                    <img src={urlFor(icon)} alt="icons" />
+                  </Box>
+                  <Box>
+                    <Text>{name}</Text>
+                  </Box>
+                </Flex>
+              </SlideIn>
             );
           })}
         </Flex>
@@ -76,54 +81,56 @@ const Skills = () => {
           {experience?.map((data) => {
             const { year, works, _id } = data;
             return (
-              <Flex
-                key={_id}
-                alignItems="flex-start"
-                justifyContent="space-between"
-                w="100%"
-                marginBottom="0.5em"
-              >
-                <Box w="20%" color="rgb(49,59,172)">
-                  <Text fontWeight="black">{year}</Text>
-                </Box>
-                <Box w="70%">
-                  {works?.map((item) => {
-                    const { company, desc, name, _key } = item;
-                    return (
-                      <Flex key={_key} direction="column">
-                        <Box>
-                          <Text fontWeight="black">{name}</Text>
-                        </Box>
-                        <Box>
-                          <Text fontWeight="black" marginTop="0.9em">
-                            {company}
-                          </Text>
-                        </Box>
-                        <Box
-                          textAlign="center"
-                          fontSize="0.7em"
-                          w="70%"
-                          marginTop="0.9em"
-                        >
-                          <Accordion allowToggle>
-                            <AccordionItem>
-                              <h4>
-                                <AccordionButton>
-                                  <Box as="span" flex="1" textAlign="left">
-                                    more about this
-                                  </Box>
-                                  <AccordionIcon />
-                                </AccordionButton>
-                              </h4>
-                              <AccordionPanel pb={4}>{desc}</AccordionPanel>
-                            </AccordionItem>
-                          </Accordion>
-                        </Box>
-                      </Flex>
-                    );
-                  })}
-                </Box>
-              </Flex>
+              <SlideIn direction={"right"}>
+                <Flex
+                  key={_id}
+                  alignItems="flex-start"
+                  justifyContent="space-between"
+                  w="100%"
+                  marginBottom="0.5em"
+                >
+                  <Box w="20%" color="rgb(49,59,172)">
+                    <Text fontWeight="black">{year}</Text>
+                  </Box>
+                  <Box w="70%">
+                    {works?.map((item) => {
+                      const { company, desc, name, _key } = item;
+                      return (
+                        <Flex key={_key} direction="column">
+                          <Box>
+                            <Text fontWeight="black">{name}</Text>
+                          </Box>
+                          <Box>
+                            <Text fontWeight="black" marginTop="0.9em">
+                              {company}
+                            </Text>
+                          </Box>
+                          <Box
+                            textAlign="center"
+                            fontSize="0.7em"
+                            w="70%"
+                            marginTop="0.9em"
+                          >
+                            <Accordion allowToggle>
+                              <AccordionItem>
+                                <h4>
+                                  <AccordionButton>
+                                    <Box as="span" flex="1" textAlign="left">
+                                      more about this
+                                    </Box>
+                                    <AccordionIcon />
+                                  </AccordionButton>
+                                </h4>
+                                <AccordionPanel pb={4}>{desc}</AccordionPanel>
+                              </AccordionItem>
+                            </Accordion>
+                          </Box>
+                        </Flex>
+                      );
+                    })}
+                  </Box>
+                </Flex>
+              </SlideIn>
             );
           })}
         </Flex>

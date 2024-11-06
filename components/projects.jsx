@@ -1,14 +1,9 @@
 import React, { useContext, useState } from "react";
-import {
-  Box,
-  Flex,
-  Text,
-  useMediaQuery,
- 
-} from "@chakra-ui/react";
+import { Box, Flex, Text, useMediaQuery } from "@chakra-ui/react";
 import { AppWrap } from "@/Wrapper";
 import { UserContext } from "@/pages";
 import ProjectsWrap from "./projectsWrap";
+import SlideIn from "@/customComponents/slideIn";
 
 const Projects = () => {
   const { work } = useContext(UserContext);
@@ -35,11 +30,9 @@ const Projects = () => {
       fontWeight="black"
       position={"relative"}
     >
-      <Box>
-        <Text marginBottom={"0.5em"} fontSize={laptopView ? "2em" : "1.5em"}>
-          Projects
-        </Text>
-      </Box>
+      <Text fontSize={laptopView ? "2em" : "1.5em"} position={"relative"}>
+        <SlideIn direction={"left"}>Projects</SlideIn>
+      </Text>
       <Box
         w="100%"
         h="auto"
