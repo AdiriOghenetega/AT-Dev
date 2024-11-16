@@ -45,7 +45,7 @@ const Skills = () => {
           {skill?.map((data) => {
             const { icon, bgColor, name, _id } = data;
             return (
-              <SlideIn direction={"left"}>
+              <SlideIn direction={"up"}>
                 <Flex
                   key={_id}
                   direction="column"
@@ -81,9 +81,8 @@ const Skills = () => {
           {experience?.map((data) => {
             const { year, works, _id } = data;
             return (
-              <SlideIn direction={"right"}>
+              <SlideIn direction={"down"} key={_id}>
                 <Flex
-                  key={_id}
                   alignItems="flex-start"
                   justifyContent="space-between"
                   w="100%"

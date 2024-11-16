@@ -76,8 +76,9 @@ function Contact() {
       alignItems="center"
       justifyContent="center"
       fontWeight="black"
+      marginTop={mobileView && "4em"}
     >
-      <SlideIn direction={"up"}>
+      <SlideIn direction={"left"}>
         <Text fontSize={laptopView ? "2em" : "1.5em"}>Contact Me</Text>
       </SlideIn>
       <Flex

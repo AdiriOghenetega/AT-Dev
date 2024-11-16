@@ -32,7 +32,7 @@ const Header = () => {
       zIndex="2"
     >
       <Flex>
-        <Link href="/" passHref>
+        <Link href="/" passhref>
           <Flex alignItems="center" color="rgb(1,22,39)">
             <Icon as={FaGhost} w={8} h={8} />
             <Text

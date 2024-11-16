@@ -78,7 +78,7 @@ const About = () => {
               <Text fontSize="1.331em" marginTop="0.3em">
                 {description}
               </Text>
-              <a href={resume} target="_blank" passHref>
+              <a href={resume} target="_blank" passhref>
                 <Button
                   marginTop="0.5em"
                   p="1em"

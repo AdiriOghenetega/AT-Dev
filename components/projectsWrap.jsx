@@ -82,7 +82,7 @@ const ProjectsWrap = ({ work, category }) => {
       {projects?.length &&
         projects?.map((project) => {
           return (
-            <SlideIn direction={"right"}>
+            <SlideIn direction={"up"} key={project.title}>
               <Box
                 bg={containerColor}
                 w={"300px"}
