@@ -1,126 +1,177 @@
-import React, { useContext } from "react";
+import React, { useContext, useMemo } from "react";
 import { AppWrap } from "@/Wrapper";
 import {
   Flex,
   Text,
-  Divider,
   Button,
-  chakra,
-  shouldForwardProp,
+  Box,
+  VStack,
   useMediaQuery,
+  Image,
+  Container,
 } from "@chakra-ui/react";
-import { motion, isValidMotionProp } from "framer-motion";
+import { motion } from "framer-motion";
 import { UserContext } from "@/pages";
 import { urlFor } from "@/pages";
 
+// Subtle, professional animations
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, ease: "easeOut" }
+};
 
-const ChakraBox = chakra(motion.div, {
-  shouldForwardProp: (prop) =>
-    isValidMotionProp(prop) || shouldForwardProp(prop),
-});
+const scaleOnHover = {
+  whileHover: { scale: 1.02 },
+  transition: { duration: 0.2, ease: "easeInOut" }
+};
 
 const About = () => {
   const { about } = useContext(UserContext);
+  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
 
-  const [mobileView, laptopView] = useMediaQuery([
-    "(max-width: 600px)",
-    "(min-width: 601px)",
-  ]);
+  // Memoize to prevent unnecessary re-renders
+  const aboutData = useMemo(() => about?.[0], [about]);
+
+  if (!aboutData) return null;
+
+  const { title, subtitle, description, imgUrl, resume } = aboutData;
 
   return (
-    <>
-      {about?.map((data) => {
-        const { title, subtitle, description, imgUrl, _id, resume } = data;
-
-        return (
-          <ChakraBox
-            display="flex"
-            flexDirection={laptopView ? "row" : "column"}
-            p={"7em 1em"}
-            w="100%"
-            h={"auto"}
-            fontFamily="Space Grotesk"
-            justifyContent="space-around"
-            alignItems={mobileView && "center"}
-            key={_id}
+    <Container maxW="7xl" py={{ base: 16, md: 24 }}>
+      <Flex
+        direction={{ base: "column", lg: "row" }}
+        align="center"
+        justify="space-between"
+        gap={{ base: 12, lg: 16 }}
+        minH={{ lg: "70vh" }}
+      >
+        {/* Content Section */}
+        <motion.div {...fadeInUp}>
+          <VStack
+            align={{ base: "center", lg: "flex-start" }}
+            spacing={6}
+            maxW={{ lg: "500px" }}
+            textAlign={{ base: "center", lg: "left" }}
           >
-            <ChakraBox
-              bg="rgb(199,163,242,.5)"
-              w={laptopView ? "300px" : "230px"}
-              h={laptopView ? "300px" : "auto"}
-              display="flex"
-              flexDirection="column"
-              borderRadius="10px"
-              boxShadow="0 0 25px rgba(0,0,0,0.2)"
-              p="1em"
-              initial={{ x: 0 }}
-              whileInView={{
-                x: [-100, 0],
-              }}
-              transition={{
-                duration: 0.5,
-              }}
-            >
+            <VStack spacing={3} align={{ base: "center", lg: "flex-start" }}>
               <Text
-                fontWeight="black"
-                fontSize={laptopView ? "1.5em" : "1.35em"}
+                fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+                fontWeight="bold"
+                color="gray.900"
+                _dark={{ color: "white" }}
+                letterSpacing="tight"
+                lineHeight="shorter"
               >
                 {title}
               </Text>
-              <Divider />
               <Text
-                fontWeight="black"
-                fontSize={laptopView ? "1.5em" : "1.35em"}
+                fontSize={{ base: "xl", md: "2xl" }}
+                color="blue.600"
+                _dark={{ color: "blue.300" }}
+                fontWeight="medium"
               >
                 {subtitle}
               </Text>
-              <Divider />
-              <Text fontSize="1.331em" marginTop="0.3em">
-                {description}
-              </Text>
-              <a href={resume} target="_blank" passhref>
-                <Button
-                  marginTop="0.5em"
-                  p="1em"
-                  w={laptopView ? "99%" : "98%"}
-                >
-                  my resume
-                </Button>
-              </a>
-            </ChakraBox>
-            <Flex
-              alignItems="center"
-              justifyContent="center"
-              zIndex="1"
-              marginTop={laptopView ? "0" : "2em"}
+            </VStack>
+
+            <Text
+              fontSize={{ base: "lg", md: "xl" }}
+              color="gray.600"
+              _dark={{ color: "gray.300" }}
+              lineHeight="relaxed"
+              maxW="600px"
             >
-              <ChakraBox
-                initial={{ scale: 1 }}
-                whileInView={{ scale: [1.2, 1] }}
-                whileHover={{ scale: 1.1 }}
-                transition={{ duration: 0.5 }}
-                w={laptopView ? "300px" : "230px"}
-                h={laptopView ? "300px" : "230px"}
-                bg="gray.300"
-                borderRadius="70px 30px 150px 100px"
-              ></ChakraBox>
-              <ChakraBox
-                position="absolute"
-                w={laptopView ? "250px" : "200px"}
-                h={laptopView ? "250px" : "200pxc"}
-                borderRadius="50px"
-                initial={{ scale: 1, filter: "grayscale(100%)" }}
-                whileInView={{ scale: 1.2, filter: "grayscale(20%)" }}
-                whileHover={{ scale: 1, filter: "grayscale(100%)" }}
-                transition={{ duration: 0.5 }}
+              {description}
+            </Text>
+
+            <motion.div {...scaleOnHover}>
+              <Button
+                as="a"
+                href={resume}
+                target="_blank"
+                size="lg"
+                colorScheme="blue"
+                variant="solid"
+                px={8}
+                py={6}
+                fontSize="md"
+                fontWeight="medium"
+                borderRadius="xl"
+                boxShadow="lg"
+                _hover={{
+                  transform: "translateY(-2px)",
+                  boxShadow: "xl",
+                }}
+                transition="all 0.2s"
               >
-                <img src={urlFor(imgUrl)} alt="user" />
-              </ChakraBox>
-            </Flex>
-          </ChakraBox>
-        );
-      })}
-    </>
+                Download Resume
+              </Button>
+            </motion.div>
+          </VStack>
+        </motion.div>
+
+        {/* Image Section */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+        >
+          <Box
+            position="relative"
+            w={{ base: "280px", md: "350px", lg: "400px" }}
+            h={{ base: "280px", md: "350px", lg: "400px" }}
+          >
+            {/* Subtle background decoration */}
+            <Box
+              position="absolute"
+              top="20px"
+              left="20px"
+              w="full"
+              h="full"
+              bg="blue.100"
+              _dark={{ bg: "blue.900" }}
+              borderRadius="3xl"
+              opacity={0.3}
+            />
+            
+            {/* Main image container */}
+            <Box
+              position="relative"
+              w="full"
+              h="full"
+              borderRadius="3xl"
+              overflow="hidden"
+              boxShadow="2xl"
+              bg="white"
+              _dark={{ bg: "gray.800" }}
+            >
+              <Image
+                src={urlFor(imgUrl)?.width(400).height(400).url()}
+                alt={`${title} - Profile`}
+                w="full"
+                h="full"
+                objectFit="cover"
+                loading="lazy"
+                fallback={
+                  <Box
+                    w="full"
+                    h="full"
+                    bg="gray.200"
+                    _dark={{ bg: "gray.700" }}
+                    display="flex"
+                    align="center"
+                    justify="center"
+                  >
+                    <Text color="gray.500">Loading...</Text>
+                  </Box>
+                }
+              />
+            </Box>
+          </Box>
+        </motion.div>
+      </Flex>
+    </Container>
   );
 };
 

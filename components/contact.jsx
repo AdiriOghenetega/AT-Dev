@@ -1,185 +1,174 @@
-import React, { useState, useRef } from "react";
+import React from "react";
 import {
   Box,
-  Flex,
   Text,
-  Input,
-  Textarea,
-  Button,
-  useMediaQuery,
+  VStack,
+  Container,
+  SimpleGrid,
+  Icon,
+  Link,
   useColorModeValue,
 } from "@chakra-ui/react";
+import { motion } from "framer-motion";
 import { AppWrap } from "@/Wrapper";
-import Image from "next/image";
-import emailjs from "@emailjs/browser";
-import SlideIn from "@/customComponents/slideIn";
+import { EmailIcon, PhoneIcon } from "@chakra-ui/icons";
 
-function Contact() {
-  const containerColor = useColorModeValue(
-    "rgb(195,203,211,.8)",
-    "rgba(247,243,252,0.2)"
-  );
+const MotionBox = motion(Box);
 
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [loading, setLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6, ease: "easeOut" }
+};
 
-  const { name, email, message } = formData;
-
-  function handleChange(e) {
-    const { name, value } = e.target;
-
-    setFormData((prev) => {
-      return {
-        ...prev,
-        [name]: value,
-      };
-    });
-  }
-
-  const serviceID = process.env.NEXT_PUBLIC_EMAIL_SERVICE_ID;
-  const templateID = process.env.NEXT_PUBLIC_EMAIL_TEMPLATE_ID;
-  const publicApi = process.env.NEXT_PUBLIC_EMAIL_PUBLIC_KEY;
-
-  const form = useRef();
-
-  const sendEmail = (e) => {
-    e.preventDefault();
-    setLoading(true);
-    emailjs.sendForm(serviceID, templateID, form.current, publicApi).then(
-      (result) => {
-        console.log(result.text);
-        setLoading(false);
-        setSubmitted(true);
-      },
-      (error) => {
-        console.log(error.text);
-      }
-    );
-  };
-
-  const [mobileView, laptopView] = useMediaQuery([
-    "(max-width: 600px)",
-    "(min-width: 601px)",
-  ]);
+const ContactCard = ({ icon, title, subtitle, href, type = "link" }) => {
+  const cardBg = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("gray.200", "gray.700");
+  const iconColor = useColorModeValue("blue.500", "blue.300");
 
   return (
-    <Flex
-      w="100%"
-      h={"auto"}
-      direction="column"
-      fontFamily="Space Grotesk"
-      alignItems="center"
-      justifyContent="center"
-      fontWeight="black"
-      marginTop={mobileView && "4em"}
+    <MotionBox
+      as={type === "tel" ? "a" : type === "mailto" ? "a" : Link}
+      href={href}
+      target={type === "link" ? "_blank" : undefined}
+      rel={type === "link" ? "noopener noreferrer" : undefined}
+      variants={fadeInUp}
+      bg={cardBg}
+      p={6}
+      borderRadius="xl"
+      border="1px"
+      borderColor={borderColor}
+      boxShadow="md"
+      _hover={{
+        transform: "translateY(-2px)",
+        boxShadow: "lg",
+        borderColor: iconColor,
+      }}
+      transition="all 0.2s ease-in-out"
+      textDecoration="none"
+      _focus={{ outline: "none" }}
     >
-      <SlideIn direction={"left"}>
-        <Text fontSize={laptopView ? "2em" : "1.5em"}>Contact Me</Text>
-      </SlideIn>
-      <Flex
-        w={laptopView ? "500px" : "auto"}
-        h={laptopView ? "auto" : "10em"}
-        alignItems="center"
-        justifyContent="space-between"
-        marginTop="2em"
-        direction={laptopView ? "row" : "column"}
-      >
-        <SlideIn direction={"left"}>
-          <Flex
-            w="220px"
-            alignItems="center"
-            justifyContent="space-between"
-            bg={containerColor}
-            p="1em"
-            borderRadius="0.5em"
-            boxShadow="0 0 25px rgba(0,0,0,0.2)"
-          >
-            <Box w="40px" h="40px" position="relative">
-              <Image
-                src="/email.png"
-                alt="email"
-                fill
-                sizes="(max-width:345px) 20px,(max-width:600px) 30px,(max-width:1023px) 40px,1000px"
-              />
-            </Box>
-            <Box fontSize="13px">
-              <a href="mailto:adiritega@gmail.com">adiritega@gmail.com</a>
-            </Box>
-          </Flex>
-        </SlideIn>
-        <SlideIn direction={"right"}>
-          <Flex
-            w="215px"
-            alignItems="center"
-            justifyContent="space-between"
-            bg={containerColor}
-            p="1em"
-            borderRadius="0.5em"
-            boxShadow="0 0 25px rgba(0,0,0,0.2)"
-          >
-            <Box w="40px" h="40px" position="relative">
-              <Image
-                src="/mobile.png"
-                alt="mobile"
-                fill
-                sizes="(max-width:345px) 20px,(max-width:600px) 30px,(max-width:1023px) 40px,1000px"
-              />
-            </Box>
-            <Box fontSize="13px">
-              <a href="tel:+2348142604385">+234(814) 260-4385</a>
-            </Box>
-          </Flex>
-        </SlideIn>
-      </Flex>
-      {/* {submitted ? (
-        <Box p="2em">
-          <Text fontSize={laptopView ? "1.5em" : "1em"}>
-            Thanks for contacting me, will get back to you shortly
-          </Text>
+      <VStack spacing={4}>
+        <Box
+          w="50px"
+          h="50px"
+          borderRadius="full"
+          bg={`${iconColor}15`}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Icon as={icon} w={6} h={6} color={iconColor} />
         </Box>
-      ) : (
-        <form ref={form} style={{ width: laptopView ? "500px" : "90%" }}>
-          <Flex
-            direction="column"
-            w="100%"
-            h="280px"
-            alignItems="center"
-            justifyContent="space-between"
-            marginTop="2em"
+        
+        <VStack spacing={1}>
+          <Text
+            fontSize="lg"
+            fontWeight="bold"
+            color="gray.900"
+            _dark={{ color: "white" }}
           >
-            <Input
-              type="text"
-              placeholder="Name"
-              value={name}
-              name="name"
-              onChange={handleChange}
-            />
-            <Input
-              type="text"
-              placeholder="Email"
-              value={email}
-              name="email"
-              onChange={handleChange}
-            />
-            <Textarea
-              placeholder="message"
-              value={message}
-              name="message"
-              onChange={handleChange}
-            />
-            <Button onClick={sendEmail}>
-              {loading ? "Submitting" : "Send Message"}
-            </Button>
-          </Flex>
-        </form>
-      )} */}
-    </Flex>
+            {title}
+          </Text>
+          <Text
+            fontSize="sm"
+            color="gray.600"
+            _dark={{ color: "gray.400" }}
+            textAlign="center"
+          >
+            {subtitle}
+          </Text>
+        </VStack>
+      </VStack>
+    </MotionBox>
   );
-}
+};
+
+const Contact = () => {
+  return (
+    <Container maxW="7xl" py={{ base: 16, md: 24 }}>
+      <VStack spacing={16} align="center">
+        {/* Header */}
+        <VStack spacing={6} textAlign="center">
+          <Text
+            fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+            fontWeight="bold"
+            color="gray.900"
+            _dark={{ color: "white" }}
+          >
+            Get In Touch
+          </Text>
+          
+          <Text
+            fontSize="lg"
+            color="gray.600"
+            _dark={{ color: "gray.400" }}
+            maxW="600px"
+          >
+            Have a project in mind or just want to chat? I'd love to hear from you.
+          </Text>
+        </VStack>
+
+        {/* Contact Information - Centered */}
+        <MotionBox 
+          variants={fadeInUp} 
+          initial="initial" 
+          whileInView="animate" 
+          viewport={{ once: true }}
+        >
+          <VStack spacing={8} align="center">
+            <Text
+              fontSize="2xl"
+              fontWeight="bold"
+              color="gray.900"
+              _dark={{ color: "white" }}
+              textAlign="center"
+            >
+              Contact Information
+            </Text>
+            
+            <SimpleGrid 
+              columns={{ base: 1, md: 2 }} 
+              spacing={8} 
+              maxW="600px"
+            >
+              <ContactCard
+                icon={EmailIcon}
+                title="Email"
+                subtitle="adiritega@gmail.com"
+                href="mailto:adiritega@gmail.com"
+                type="mailto"
+              />
+              
+              <ContactCard
+                icon={PhoneIcon}
+                title="Phone"
+                subtitle="+234 814 260 4385"
+                href="tel:+2348142604385"
+                type="tel"
+              />
+            </SimpleGrid>
+
+            {/* Additional message */}
+            <Box
+              textAlign="center"
+              maxW="500px"
+              pt={4}
+            >
+              <Text
+                fontSize="md"
+                color="gray.600"
+                _dark={{ color: "gray.400" }}
+                lineHeight="tall"
+              >
+                Feel free to reach out through email or phone. I'm always excited to discuss new opportunities and collaborate on interesting projects.
+              </Text>
+            </Box>
+          </VStack>
+        </MotionBox>
+      </VStack>
+    </Container>
+  );
+};
 
 export default AppWrap(Contact, "Contact");

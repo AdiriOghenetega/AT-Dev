@@ -1,21 +1,29 @@
-import React from 'react'
-import {Box,Text} from "@chakra-ui/react"
+import React from 'react';
+import { Box, Text, VStack, useColorModeValue } from "@chakra-ui/react";
 
 const Footer = () => {
+  const bg = useColorModeValue("gray.50", "gray.900");
+  const color = useColorModeValue("gray.600", "gray.400");
+
   return (
     <Box 
-    color="rgb(52,68,83)" p="1em"
-    bg="rgb(239,232,250,.5)"
-    w="100%"
-    backdropFilter="blur(1px)"
-    zIndex="2"
-    textAlign="center"
-    marginTop="2em"
-   >
-    <Text fontSize="10px">&copy; Adiri Oghenetega</Text>
-    <Text fontSize="10px">Built with NextJs,Chakra UI,Framer Motion,Sanity.io & ❤️</Text>
-   </Box>
-  )
-}
+      bg={bg}
+      color={color}
+      py={8}
+      textAlign="center"
+      borderTop="1px"
+      borderColor={useColorModeValue("gray.200", "gray.700")}
+    >
+      <VStack spacing={2}>
+        <Text fontSize="sm">
+          &copy; {new Date().getFullYear()} Adiri Oghenetega. All rights reserved.
+        </Text>
+        <Text fontSize="xs">
+          Built with Next.js, Chakra UI, Framer Motion & Sanity.io
+        </Text>
+      </VStack>
+    </Box>
+  );
+};
 
-export default Footer
+export default Footer;

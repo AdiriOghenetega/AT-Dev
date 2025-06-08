@@ -1,128 +1,269 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
-  Switch,
-  useColorMode,
   Box,
   Flex,
-  Icon,
   Text,
-  Spacer,
-  Show,
-  Tooltip,
-  useColorModeValue
+  Button,
+  IconButton,
+  HStack,
+  VStack,
+  useColorMode,
+  useColorModeValue,
+  useMediaQuery,
+  Container,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
-import { myLinks } from "../utils/navLinks";
+import { SunIcon, MoonIcon } from "@chakra-ui/icons";
 import Link from "next/link";
-import { FaGhost } from "react-icons/fa";
+import { myLinks } from "../utils/navLinks";
 
-const Header = () => {
-  const { colorMode, toggleColorMode } = useColorMode();
-  const tipBg = useColorModeValue("black", "white");
-  const tipColor = useColorModeValue("white", "black");
+const MotionBox = motion(Box);
+
+const NavLink = ({ href, children, onClick, isActive }) => {
+  const color = useColorModeValue("gray.700", "gray.200");
+  const activeColor = useColorModeValue("blue.600", "blue.300");
+  const hoverBg = useColorModeValue("gray.100", "gray.700");
 
   return (
-    <Flex
-      direction="column"
-      p="1em"
-      bg="rgb(239,232,250,.5)"
-      position="fixed"
-      w="100%"
-      backdropFilter="blur(1px)"
-      zIndex="2"
+    <Button
+      as="a"
+      href={href}
+      variant="ghost"
+      size="md"
+      color={isActive ? activeColor : color}
+      fontWeight={isActive ? "bold" : "medium"}
+      _hover={{
+        bg: hoverBg,
+        color: activeColor,
+        transform: "translateY(-1px)",
+      }}
+      transition="all 0.2s"
+      onClick={onClick}
+      position="relative"
     >
-      <Flex>
-        <Link href="/" passhref>
-          <Flex alignItems="center" color="rgb(1,22,39)">
-            <Icon as={FaGhost} w={8} h={8} />
-            <Text
-              fontWeight="black"
-              fontSize="large"
-              fontFamily="Space Grotesk"
-              marginLeft={1}
-            >
-              AT-Dev
-            </Text>
-          </Flex>
-        </Link>
-        <Spacer />
-        <Show breakpoint="(min-width: 601px)">
-          <Flex w="50%" alignItems="center" justifyContent="space-between">
-            {myLinks?.map((linked) => (
-              <Flex
-                key={linked.id}
-                alignItems="center"
-                direction="column"
-                role="group"
-                as={motion.div}
-              >
-                <Box
-                  bg={linked.bg}
-                  w="5px"
-                  h="5px"
-                  borderRadius="50%"
-                  opacity="0"
-                  _groupHover={{ opacity: "1" }}
-                ></Box>
-                <a href={`#${linked.name}`}>
-                  <Text
-                    fontWeight="black"
-                    color="rgb(1,22,39)"
-                    fontFamily="Space Grotesk"
-                  >
-                    {linked.name}
-                  </Text>
-                </a>
-              </Flex>
-            ))}
-          </Flex>
-          <Spacer />
-        </Show>
-        <Tooltip
-        label="Theme"
-        bg={tipBg}
-        color={tipColor}
-        placement="left"
+      {children}
+      {isActive && (
+        <MotionBox
+          position="absolute"
+          bottom="-2px"
+          left="50%"
+          w="20px"
+          h="2px"
+          bg={activeColor}
+          borderRadius="full"
+          layoutId="activeIndicator"
+          initial={false}
+          animate={{ x: "-50%" }}
+        />
+      )}
+    </Button>
+  );
+};
+
+const Header = () => {
+  const [activeSection, setActiveSection] = useState("");
+  const [isScrolled, setIsScrolled] = useState(false);
+  const { colorMode, toggleColorMode } = useColorMode();
+  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
+
+  const headerBg = useColorModeValue(
+    isScrolled ? "rgba(255, 255, 255, 0.9)" : "rgba(255, 255, 255, 0.7)",
+    isScrolled ? "rgba(26, 32, 44, 0.9)" : "rgba(26, 32, 44, 0.7)"
+  );
+  const borderColor = useColorModeValue("gray.200", "gray.700");
+
+  // Handle scroll effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Handle active section detection
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      const headerHeight = isLargerThan768 ? 80 : 120; // Account for different header heights
+      
+      // Get all sections and their positions
+      const sections = myLinks.map(link => {
+        const element = document.getElementById(link.name);
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          const elementTop = scrollPosition + rect.top;
+          return {
+            name: link.name,
+            top: elementTop,
+            bottom: elementTop + element.offsetHeight
+          };
+        }
+        return null;
+      }).filter(Boolean);
+
+      // Find which section is currently in view
+      const currentSection = sections.find(section => {
+        const sectionStart = section.top - headerHeight - 50; // Extra buffer
+        const sectionEnd = section.bottom - headerHeight;
+        return scrollPosition >= sectionStart && scrollPosition < sectionEnd;
+      });
+
+      if (currentSection && currentSection.name !== activeSection) {
+        setActiveSection(currentSection.name);
+      }
+    };
+
+    // Throttle scroll events for performance
+    let ticking = false;
+    const throttledHandleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          handleScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    };
+
+    window.addEventListener('scroll', throttledHandleScroll);
+    
+    // Initial check
+    handleScroll();
+
+    return () => {
+      window.removeEventListener('scroll', throttledHandleScroll);
+    };
+  }, [isLargerThan768, activeSection]);
+
+  const handleNavClick = (sectionName) => {
+    const element = document.getElementById(sectionName);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  return (
+    <MotionBox
+      position="fixed"
+      top={0}
+      left={0}
+      right={0}
+      zIndex={1000}
+      initial={{ y: -100 }}
+      animate={{ y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Box
+        bg={headerBg}
+        backdropFilter="blur(10px)"
+        borderBottom="1px"
+        borderColor={isScrolled ? borderColor : "transparent"}
+        transition="all 0.3s ease-in-out"
       >
-        <Switch onChange={() => toggleColorMode()} m="2" />
-      </Tooltip>
-      </Flex>
-      <Show breakpoint="(max-width: 600px)">
-        <Flex
-          w="100%"
-          alignItems="center"
-          justifyContent="space-between"
-          p="0 0.5em"
-        >
-          {myLinks?.map((linked) => (
-            <Flex
-              key={linked.id}
-              alignItems="center"
-              direction="column"
-              role="group"
-              as={motion.div}
-            >
-              <Box
-                bg={linked.bg}
-                w="9px"
-                h="3px"
-                opacity="0"
-                _groupHover={{ opacity: "1" }}
-              ></Box>
-              <a href={`#${linked.name}`}>
-                <Text
-                  fontWeight="black"
-                  color="rgb(1,22,39)"
-                  fontFamily="Space Grotesk"
-                >
-                  {linked.name}
-                </Text>
-              </a>
+        <Container maxW="7xl">
+          <VStack spacing={0}>
+            {/* Main Header Row */}
+            <Flex h={16} align="center" justify="space-between" w="full">
+              {/* Logo */}
+              <Link href="/" passHref>
+                <Box cursor="pointer">
+                  <Text
+                    fontSize="xl"
+                    fontWeight="bold"
+                    bgGradient="linear(to-r, blue.500, purple.600)"
+                    bgClip="text"
+                    _hover={{
+                      transform: "scale(1.05)",
+                    }}
+                    transition="transform 0.2s"
+                  >
+                    AT-Dev
+                  </Text>
+                </Box>
+              </Link>
+
+              {/* Desktop Navigation */}
+              {isLargerThan768 && (
+                <HStack spacing={1}>
+                  {myLinks.map((link) => (
+                    <NavLink
+                      key={link.id}
+                      href={`#${link.name}`}
+                      isActive={activeSection === link.name}
+                      onClick={() => handleNavClick(link.name)}
+                    >
+                      {link.name}
+                    </NavLink>
+                  ))}
+                </HStack>
+              )}
+
+              {/* Theme Toggle */}
+              <IconButton
+                aria-label="Toggle color mode"
+                icon={colorMode === "light" ? <MoonIcon /> : <SunIcon />}
+                variant="ghost"
+                size="md"
+                onClick={toggleColorMode}
+                _hover={{
+                  transform: "rotate(180deg)",
+                }}
+                transition="transform 0.3s"
+              />
             </Flex>
-          ))}
-        </Flex>
-      </Show>
-    </Flex>
+
+            {/* Mobile Navigation Row */}
+            {!isLargerThan768 && (
+              <Box w="full" pb={3}>
+                <HStack spacing={1} justify="space-between" px={2}>
+                  {myLinks.map((link) => (
+                    <Button
+                      key={link.id}
+                      as="a"
+                      href={`#${link.name}`}
+                      variant="ghost"
+                      size="sm"
+                      color={activeSection === link.name ? "blue.600" : "gray.700"}
+                      _dark={{
+                        color: activeSection === link.name ? "blue.300" : "gray.200"
+                      }}
+                      fontWeight={activeSection === link.name ? "bold" : "medium"}
+                      _hover={{
+                        color: "blue.600",
+                        _dark: { color: "blue.300" }
+                      }}
+                      onClick={() => handleNavClick(link.name)}
+                      position="relative"
+                      flex={1}
+                      fontSize="sm"
+                    >
+                      {link.name}
+                      {activeSection === link.name && (
+                        <MotionBox
+                          position="absolute"
+                          bottom="0"
+                          left="50%"
+                          w="20px"
+                          h="2px"
+                          bg="blue.600"
+                          _dark={{ bg: "blue.300" }}
+                          borderRadius="full"
+                          layoutId="mobileActiveIndicator"
+                          initial={false}
+                          animate={{ x: "-50%" }}
+                        />
+                      )}
+                    </Button>
+                  ))}
+                </HStack>
+              </Box>
+            )}
+          </VStack>
+        </Container>
+      </Box>
+    </MotionBox>
   );
 };
 
