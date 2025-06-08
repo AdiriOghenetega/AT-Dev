@@ -16,7 +16,7 @@ import {
   useColorModeValue,
   Skeleton,
 } from "@chakra-ui/react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { AppWrap } from "@/Wrapper";
 import { UserContext } from "@/pages";
 import { urlFor } from "@/pages";
@@ -28,26 +28,40 @@ const MotionBox = motion(Box);
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 },
+  exit: { opacity: 0, y: -20 }
 };
 
 const ProjectCard = ({ project, index }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
-
+  
   const isMobile = project.tags?.includes("mobile");
 
+  // Optimize image URL
+  const getImageUrl = () => {
+    
+    try {
+      if (!project.imgUrl) return null;
+      return urlFor(project.imgUrl)
+        .width(400)
+        .height(250)
+        .quality(85)
+        .format('webp')
+        .url();
+    } catch (error) {
+      console.warn('Error generating image URL:', error);
+      return null;
+    }
+  };
+
+  const imageUrl = getImageUrl();
+  
   return (
-    <MotionBox
-      layout
-      variants={cardVariants}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-      transition={{ duration: 0.3, delay: index * 0.1 }}
+    <Box
       bg={cardBg}
-      borderRadius="2xl"
+      borderRadius="xl"
       overflow="hidden"
       boxShadow="lg"
       border="1px"
@@ -56,22 +70,57 @@ const ProjectCard = ({ project, index }) => {
         transform: "translateY(-4px)",
         boxShadow: "xl",
       }}
-      h="full"
+      transition="all 0.2s ease-in-out"
+      h="auto"
+      minH={{ base: "auto", md: "400px" }}
+      w="full"
+      maxW={{ base: "100%", md: "350px" }}
+      mx="auto"
     >
       {/* Image Section */}
-      <Box position="relative" w="full" h="200px" overflow="hidden">
-        <Skeleton isLoaded={imageLoaded} w="full" h="full">
-          <Image
-            src={urlFor(project.imgUrl)?.width(400).height(200).url()}
-            alt={project.title}
+      <Box 
+        position="relative" 
+        w="full" 
+        h={{ base: "180px", md: "200px" }} 
+        overflow="hidden" 
+        bg="gray.100" 
+        _dark={{ bg: "gray.700" }}
+      >
+        {imageUrl ? (
+          <>
+           <Image
+              src={imageUrl}
+              alt={project.title || "Project image"}
+              w="full"
+              h="full"
+              objectFit="cover"
+              loading="lazy"
+              style={{ display: 'block' }}
+            />
+          </>
+        ) : null}
+
+        {/* Fallback when no image or error */}
+        {(!imageUrl || imageError) && (
+          <Box
             w="full"
             h="full"
-            objectFit="cover"
-            onLoad={() => setImageLoaded(true)}
-            loading="lazy"
-          />
-        </Skeleton>
-
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+            bg="gray.200"
+            _dark={{ bg: "gray.600" }}
+            flexDirection="column"
+          >
+            <Text color="gray.500" fontSize="sm" fontWeight="medium">
+              {project.title || "Project"}
+            </Text>
+            <Text color="gray.400" fontSize="xs" mt={1}>
+              {isMobile ? "Mobile App" : "Web App"}
+            </Text>
+          </Box>
+        )}
+        
         {/* Project type badge */}
         <Badge
           position="absolute"
@@ -84,112 +133,122 @@ const ProjectCard = ({ project, index }) => {
           py={1}
           borderRadius="full"
         >
-          {isMobile ? "Mobile" : "Web"}
+          {isMobile ? "MOBILE" : "WEB"}
         </Badge>
       </Box>
 
       {/* Content Section */}
-      <VStack p={6} align="stretch" spacing={4} flex="1">
+      <VStack p={{ base: 4, md: 6 }} align="stretch" spacing={4} flex="1">
         <VStack align="stretch" spacing={2}>
           <Text
-            fontSize="xl"
+            fontSize={{ base: "md", md: "lg" }}
             fontWeight="bold"
             color="gray.900"
             _dark={{ color: "white" }}
             noOfLines={2}
+            lineHeight="tight"
           >
-            {project.title}
+            {project.title || "Untitled Project"}
           </Text>
-
+          
           <Text
-            fontSize="sm"
+            fontSize={{ base: "xs", md: "sm" }}
             color="gray.600"
             _dark={{ color: "gray.400" }}
             noOfLines={3}
             lineHeight="tall"
           >
-            {project.description}
+            {project.description || "No description available"}
           </Text>
         </VStack>
 
         {/* Tech Stack */}
-        <Box>
-          <Text
-            fontSize="xs"
-            fontWeight="medium"
-            color="gray.500"
-            _dark={{ color: "gray.500" }}
-            mb={2}
-          >
-            Tech Stack
-          </Text>
-          <Flex wrap="wrap" gap={1}>
-            {project.techs?.slice(0, 4).map((tech, index) => (
-              <Badge
-                key={index}
-                size="sm"
-                variant="subtle"
-                colorScheme="gray"
-                fontSize="xs"
-              >
-                {tech}
-              </Badge>
-            ))}
-            {project.techs?.length > 4 && (
-              <Badge
-                size="sm"
-                variant="subtle"
-                colorScheme="gray"
-                fontSize="xs"
-              >
-                +{project.techs.length - 4}
-              </Badge>
-            )}
-          </Flex>
-        </Box>
+        {project.techs && project.techs.length > 0 && (
+          <Box>
+            <Text
+              fontSize="xs"
+              fontWeight="medium"
+              color="gray.500"
+              _dark={{ color: "gray.500" }}
+              mb={2}
+            >
+              Tech Stack
+            </Text>
+            <Flex wrap="wrap" gap={1}>
+              {project.techs?.slice(0, 4).map((tech, techIndex) => (
+                <Badge
+                  key={techIndex}
+                  size="sm"
+                  variant="subtle"
+                  colorScheme="gray"
+                  fontSize={{ base: "xs", md: "xs" }}
+                >
+                  {tech}
+                </Badge>
+              ))}
+              {project.techs?.length > 4 && (
+                <Badge 
+                  size="sm" 
+                  variant="subtle" 
+                  colorScheme="gray" 
+                  fontSize={{ base: "xs", md: "xs" }}
+                >
+                  +{project.techs.length - 4}
+                </Badge>
+              )}
+            </Flex>
+          </Box>
+        )}
 
         {/* Action Buttons */}
-        <HStack spacing={3} mt="auto">
-          <Button
-            as={Link}
-            href={project.projectLink}
-            target="_blank"
-            size="sm"
-            leftIcon={<Icon as={isMobile ? AiOutlineDownload : AiOutlineEye} />}
-            colorScheme="blue"
-            variant="solid"
-            flex={1}
-            isExternal
-          >
-            {isMobile ? "Download" : "Live Demo"}
-          </Button>
-
-          <Button
-            as={Link}
-            href={project.codeLink}
-            target="_blank"
-            size="sm"
-            leftIcon={<Icon as={AiFillGithub} />}
-            variant="outline"
-            flex={1}
-            isExternal
-          >
-            Code
-          </Button>
+        <HStack spacing={{ base: 2, md: 3 }} mt="auto">
+          {project.projectLink && (
+            <Button
+              as={Link}
+              href={project.projectLink}
+              target="_blank"
+              size={{ base: "xs", md: "sm" }}
+              leftIcon={<Icon as={isMobile ? AiOutlineDownload : AiOutlineEye} />}
+              colorScheme="blue"
+              variant="solid"
+              flex={1}
+              isExternal
+              fontSize={{ base: "xs", md: "sm" }}
+            >
+              {isMobile ? "Download" : "Demo"}
+            </Button>
+          )}
+          
+          {project.codeLink && (
+            <Button
+              as={Link}
+              href={project.codeLink}
+              target="_blank"
+              size={{ base: "xs", md: "sm" }}
+              leftIcon={<Icon as={AiFillGithub} />}
+              variant="outline"
+              flex={1}
+              isExternal
+              fontSize={{ base: "xs", md: "sm" }}
+            >
+              Code
+            </Button>
+          )}
         </HStack>
       </VStack>
-    </MotionBox>
+    </Box>
   );
 };
 
 const FilterButton = ({ label, isActive, onClick, count }) => (
   <Button
-    size="md"
+    size={{ base: "sm", md: "md" }}
     variant={isActive ? "solid" : "outline"}
     colorScheme="blue"
     onClick={onClick}
     fontWeight="medium"
-    px={6}
+    px={{ base: 3, md: 6 }}
+    fontSize={{ base: "sm", md: "md" }}
   >
     {label} ({count})
   </Button>
@@ -201,23 +260,24 @@ const Projects = () => {
 
   // Memoize filtered projects for performance
   const { filteredProjects, projectCounts } = useMemo(() => {
-    if (!work?.length)
-      return {
-        filteredProjects: [],
-        projectCounts: { all: 0, web: 0, mobile: 0 },
-      };
+    if (!work?.length) return { filteredProjects: [], projectCounts: { all: 0, web: 0, mobile: 0 } };
 
-    const mobileProjects = work.filter((project) =>
+    // Ensure work data is valid
+    const validProjects = work.filter(project => 
+      project && project._id && project.title && project.imgUrl
+    );
+
+    const mobileProjects = validProjects.filter(project => 
       project.tags?.includes("mobile")
     );
-    const webProjects = work.filter(
-      (project) => !project.tags?.includes("mobile")
+    const webProjects = validProjects.filter(project => 
+      !project.tags?.includes("mobile")
     );
 
     const counts = {
-      all: work.length,
+      all: validProjects.length,
       web: webProjects.length,
-      mobile: mobileProjects.length,
+      mobile: mobileProjects.length
     };
 
     let filtered;
@@ -229,7 +289,7 @@ const Projects = () => {
         filtered = mobileProjects;
         break;
       default:
-        filtered = work;
+        filtered = validProjects;
     }
 
     return { filteredProjects: filtered, projectCounts: counts };
@@ -246,12 +306,12 @@ const Projects = () => {
   }
 
   return (
-    <Container maxW="7xl" py={{ base: 16, md: 24 }}>
+    <Container maxW="7xl" py={{ base: 16, md: 24 }} px={{ base: 4, md: 6 }}>
       <VStack spacing={12} align="stretch">
         {/* Header */}
         <VStack spacing={6}>
           <Text
-            fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+            fontSize={{ base: "2xl", md: "4xl", lg: "5xl" }}
             fontWeight="bold"
             color="gray.900"
             _dark={{ color: "white" }}
@@ -259,21 +319,28 @@ const Projects = () => {
           >
             Featured Projects
           </Text>
-
+          
           <Text
-            fontSize="lg"
+            fontSize={{ base: "md", md: "lg" }}
             color="gray.600"
             _dark={{ color: "gray.400" }}
             textAlign="center"
             maxW="600px"
+            px={{ base: 4, md: 0 }}
           >
             A collection of projects that showcase my skills and experience
           </Text>
         </VStack>
 
         {/* Filter Buttons */}
-        <Flex justify="center">
-          <ButtonGroup spacing={2}>
+        <Flex justify="center" px={{ base: 4, md: 0 }}>
+          <ButtonGroup 
+            spacing={2} 
+            size={{ base: "sm", md: "md" }}
+            isAttached={{ base: false, md: false }}
+            flexWrap="wrap"
+            justifyContent="center"
+          >
             <FilterButton
               label="All"
               isActive={activeFilter === "all"}
@@ -296,12 +363,14 @@ const Projects = () => {
         </Flex>
 
         {/* Projects Grid */}
-        <AnimatePresence mode="wait">
+        <Box w="full" px={{ base: 4, md: 0 }}>
           <SimpleGrid
             key={activeFilter}
-            columns={{ base: 1, md: 2, lg: 3 }}
-            spacing={8}
-            minChildWidth="300px"
+            columns={{ base: 1, sm: 1, md: 2, lg: 3 }}
+            spacing={{ base: 6, md: 8 }}
+            w="full"
+            justifyItems="center"
+            alignItems="start"
           >
             {filteredProjects.map((project, index) => (
               <ProjectCard
@@ -311,13 +380,18 @@ const Projects = () => {
               />
             ))}
           </SimpleGrid>
-        </AnimatePresence>
 
-        {filteredProjects.length === 0 && (
-          <Text textAlign="center" color="gray.500" fontSize="lg" py={12}>
-            No projects found for this category
-          </Text>
-        )}
+          {filteredProjects.length === 0 && (
+            <Text
+              textAlign="center"
+              color="gray.500"
+              fontSize="lg"
+              py={12}
+            >
+              No projects found for this category
+            </Text>
+          )}
+        </Box>
       </VStack>
     </Container>
   );
