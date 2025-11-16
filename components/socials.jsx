@@ -1,18 +1,11 @@
 import React from "react";
-import { AiOutlineTwitter, AiFillGithub, AiFillLinkedin } from "react-icons/ai";
+import { AiFillGithub, AiFillLinkedin } from "react-icons/ai";
 import { VStack, IconButton, Tooltip, useColorModeValue } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 
 const MotionIconButton = motion(IconButton);
 
 const socialLinks = [
-  {
-    name: "Twitter",
-    icon: AiOutlineTwitter,
-    url: "https://twitter.com/adiri_tega?t=tYACVBXxcjFscxCVd4dY5w&s=08",
-    color: "twitter.500",
-    bg: "twitter.50",
-  },
   {
     name: "GitHub", 
     icon: AiFillGithub,

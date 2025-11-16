@@ -14,7 +14,6 @@ import {
   Image,
   Link,
   useColorModeValue,
-  Skeleton,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { AppWrap } from "@/Wrapper";
@@ -24,30 +23,44 @@ import { AiOutlineEye, AiFillGithub, AiOutlineDownload } from "react-icons/ai";
 
 const MotionBox = motion(Box);
 
-// Professional, subtle animations
+// Animation variants
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+};
+
 const cardVariants = {
   hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -20 }
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.5,
+      ease: "easeOut"
+    }
+  }
 };
 
 const ProjectCard = ({ project, index }) => {
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [imageError, setImageError] = useState(false);
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
+  const hoverBg = useColorModeValue("gray.50", "gray.750");
   
   const isMobile = project.tags?.includes("mobile");
 
-  // Optimize image URL
   const getImageUrl = () => {
-    
     try {
       if (!project.imgUrl) return null;
       return urlFor(project.imgUrl)
-        .width(400)
-        .height(250)
-        .quality(85)
+        .width(600)
+        .height(400)
+        .quality(90)
         .format('webp')
         .url();
     } catch (error) {
@@ -59,36 +72,36 @@ const ProjectCard = ({ project, index }) => {
   const imageUrl = getImageUrl();
   
   return (
-    <Box
+    <MotionBox
+      variants={cardVariants}
       bg={cardBg}
-      borderRadius="xl"
+      borderRadius="2xl"
       overflow="hidden"
-      boxShadow="lg"
+      boxShadow="md"
       border="1px"
       borderColor={borderColor}
       _hover={{
-        transform: "translateY(-4px)",
-        boxShadow: "xl",
+        transform: "translateY(-8px)",
+        boxShadow: "2xl",
+        bg: hoverBg,
       }}
-      transition="all 0.2s ease-in-out"
-      h="auto"
-      minH={{ base: "auto", md: "400px" }}
-      w="full"
-      maxW={{ base: "100%", md: "350px" }}
-      mx="auto"
+      transition="all 0.3s cubic-bezier(0.4, 0, 0.2, 1)"
+      h="full"
+      display="flex"
+      flexDirection="column"
     >
-      {/* Image Section */}
+      {/* Image Section with Overlay */}
       <Box 
         position="relative" 
         w="full" 
-        h={{ base: "180px", md: "200px" }} 
-        overflow="hidden" 
+        h="280px"
+        overflow="hidden"
         bg="gray.100" 
         _dark={{ bg: "gray.700" }}
       >
         {imageUrl ? (
-          <>
-           <Image
+          <Box position="relative" h="full" w="full">
+            <Image
               src={imageUrl}
               alt={project.title || "Project image"}
               w="full"
@@ -96,12 +109,24 @@ const ProjectCard = ({ project, index }) => {
               objectFit="cover"
               loading="lazy"
               style={{ display: 'block' }}
+              transition="transform 0.3s ease"
+              _hover={{ transform: "scale(1.05)" }}
             />
-          </>
-        ) : null}
-
-        {/* Fallback when no image or error */}
-        {(!imageUrl || imageError) && (
+            
+            {/* Gradient Overlay */}
+            <Box
+              position="absolute"
+              bottom="0"
+              left="0"
+              right="0"
+              h="50%"
+              bgGradient="linear(to-t, rgba(0,0,0,0.7), transparent)"
+              opacity={0}
+              transition="opacity 0.3s"
+              _groupHover={{ opacity: 1 }}
+            />
+          </Box>
+        ) : (
           <Box
             w="full"
             h="full"
@@ -112,10 +137,10 @@ const ProjectCard = ({ project, index }) => {
             _dark={{ bg: "gray.600" }}
             flexDirection="column"
           >
-            <Text color="gray.500" fontSize="sm" fontWeight="medium">
+            <Text color="gray.500" fontSize="md" fontWeight="600">
               {project.title || "Project"}
             </Text>
-            <Text color="gray.400" fontSize="xs" mt={1}>
+            <Text color="gray.400" fontSize="sm" mt={2}>
               {isMobile ? "Mobile App" : "Web App"}
             </Text>
           </Box>
@@ -124,76 +149,79 @@ const ProjectCard = ({ project, index }) => {
         {/* Project type badge */}
         <Badge
           position="absolute"
-          top={3}
-          right={3}
+          top={4}
+          right={4}
           colorScheme={isMobile ? "purple" : "blue"}
           variant="solid"
           fontSize="xs"
-          px={2}
+          px={3}
           py={1}
           borderRadius="full"
+          fontWeight="600"
+          textTransform="uppercase"
+          letterSpacing="wide"
         >
-          {isMobile ? "MOBILE" : "WEB"}
+          {isMobile ? "Mobile" : "Web"}
         </Badge>
       </Box>
 
       {/* Content Section */}
-      <VStack p={{ base: 4, md: 6 }} align="stretch" spacing={4} flex="1">
-        <VStack align="stretch" spacing={2}>
-          <Text
-            fontSize={{ base: "md", md: "lg" }}
-            fontWeight="bold"
-            color="gray.900"
-            _dark={{ color: "white" }}
-            noOfLines={2}
-            lineHeight="tight"
-          >
-            {project.title || "Untitled Project"}
-          </Text>
-          
-          <Text
-            fontSize={{ base: "xs", md: "sm" }}
-            color="gray.600"
-            _dark={{ color: "gray.400" }}
-            noOfLines={3}
-            lineHeight="tall"
-          >
-            {project.description || "No description available"}
-          </Text>
-        </VStack>
+      <VStack p={6} align="stretch" spacing={4} flex="1">
+        {/* Title */}
+        <Text
+          fontSize="xl"
+          fontWeight="700"
+          color="gray.900"
+          _dark={{ color: "white" }}
+          noOfLines={2}
+          lineHeight="1.3"
+        >
+          {project.title || "Untitled Project"}
+        </Text>
+        
+        {/* Description */}
+        <Text
+          fontSize="sm"
+          color="gray.600"
+          _dark={{ color: "gray.400" }}
+          noOfLines={3}
+          lineHeight="1.7"
+          flex="1"
+        >
+          {project.description || "No description available"}
+        </Text>
 
         {/* Tech Stack */}
         {project.techs && project.techs.length > 0 && (
-          <Box>
-            <Text
-              fontSize="xs"
-              fontWeight="medium"
-              color="gray.500"
-              _dark={{ color: "gray.500" }}
-              mb={2}
-            >
-              Tech Stack
-            </Text>
-            <Flex wrap="wrap" gap={1}>
-              {project.techs?.slice(0, 4).map((tech, techIndex) => (
+          <Box pt={2}>
+            <Flex wrap="wrap" gap={2}>
+              {project.techs?.slice(0, 5).map((tech, techIndex) => (
                 <Badge
                   key={techIndex}
                   size="sm"
                   variant="subtle"
-                  colorScheme="gray"
-                  fontSize={{ base: "xs", md: "xs" }}
+                  colorScheme="blue"
+                  fontSize="xs"
+                  px={2}
+                  py={1}
+                  borderRadius="md"
+                  fontWeight="500"
                 >
                   {tech}
                 </Badge>
               ))}
-              {project.techs?.length > 4 && (
+              {project.techs?.length > 5 && (
                 <Badge 
                   size="sm" 
                   variant="subtle" 
                   colorScheme="gray" 
-                  fontSize={{ base: "xs", md: "xs" }}
+                  fontSize="xs"
+                  px={2}
+                  py={1}
+                  borderRadius="md"
+                  fontWeight="500"
                 >
-                  +{project.techs.length - 4}
+                  +{project.techs.length - 5} more
                 </Badge>
               )}
             </Flex>
@@ -201,21 +229,26 @@ const ProjectCard = ({ project, index }) => {
         )}
 
         {/* Action Buttons */}
-        <HStack spacing={{ base: 2, md: 3 }} mt="auto">
+        <HStack spacing={3} pt={2}>
           {project.projectLink && (
             <Button
               as={Link}
               href={project.projectLink}
               target="_blank"
-              size={{ base: "xs", md: "sm" }}
-              leftIcon={<Icon as={isMobile ? AiOutlineDownload : AiOutlineEye} />}
+              size="md"
+              leftIcon={<Icon as={isMobile ? AiOutlineDownload : AiOutlineEye} boxSize={5} />}
               colorScheme="blue"
               variant="solid"
               flex={1}
               isExternal
-              fontSize={{ base: "xs", md: "sm" }}
+              fontWeight="600"
+              _hover={{
+                transform: "translateY(-2px)",
+                boxShadow: "md",
+              }}
+              transition="all 0.2s"
             >
-              {isMobile ? "Download" : "Demo"}
+              {isMobile ? "Download" : "Live Demo"}
             </Button>
           )}
           
@@ -224,25 +257,33 @@ const ProjectCard = ({ project, index }) => {
               as={Link}
               href={project.codeLink}
               target="_blank"
-              size={{ base: "xs", md: "sm" }}
-              leftIcon={<Icon as={AiFillGithub} />}
+              size="md"
+              leftIcon={<Icon as={AiFillGithub} boxSize={5} />}
               variant="outline"
+              colorScheme="blue"
               flex={1}
               isExternal
-              fontSize={{ base: "xs", md: "sm" }}
+              fontWeight="600"
+              borderWidth="2px"
+              _hover={{
+                bg: "blue.50",
+                _dark: { bg: "gray.700" },
+                transform: "translateY(-2px)",
+              }}
+              transition="all 0.2s"
             >
-              Code
+              View Code
             </Button>
           )}
         </HStack>
       </VStack>
-    </Box>
+    </MotionBox>
   );
 };
 
 const FilterButton = ({ label, isActive, onClick, count }) => (
   <Button
-    size={{ base: "sm", md: "md" }}
+    size={"md"}
     variant={isActive ? "solid" : "outline"}
     colorScheme="blue"
     onClick={onClick}
@@ -250,7 +291,7 @@ const FilterButton = ({ label, isActive, onClick, count }) => (
     px={{ base: 3, md: 6 }}
     fontSize={{ base: "sm", md: "md" }}
   >
-    {label} ({count})
+    {label} <Text as="span" ml={2} opacity={0.7}>({count})</Text>
   </Button>
 );
 
@@ -258,11 +299,10 @@ const Projects = () => {
   const { work } = useContext(UserContext);
   const [activeFilter, setActiveFilter] = useState("all");
 
-  // Memoize filtered projects for performance
   const { filteredProjects, projectCounts } = useMemo(() => {
     if (!work?.length) return { filteredProjects: [], projectCounts: { all: 0, web: 0, mobile: 0 } };
 
-    // Ensure work data is valid
+
     const validProjects = work.filter(project => 
       project && project._id && project.title && project.imgUrl
     );
@@ -297,8 +337,8 @@ const Projects = () => {
 
   if (!work?.length) {
     return (
-      <Container maxW="7xl" py={16}>
-        <Text textAlign="center" color="gray.500">
+      <Container maxW="7xl" py={24}>
+        <Text textAlign="center" color="gray.500" fontSize="xl">
           No projects available
         </Text>
       </Container>
@@ -306,36 +346,48 @@ const Projects = () => {
   }
 
   return (
-    <Container maxW="7xl" py={{ base: 16, md: 24 }} px={{ base: 4, md: 6 }}>
-      <VStack spacing={12} align="stretch">
+    <Container maxW="7xl" py={{ base: 8, md: 32 }}>
+      <VStack spacing={16} align="stretch">
         {/* Header */}
         <VStack spacing={6}>
           <Text
-            fontSize={{ base: "2xl", md: "4xl", lg: "5xl" }}
-            fontWeight="bold"
+            fontSize={{ base: "xs", md: "sm" }}
+            color="blue.600"
+            _dark={{ color: "blue.400" }}
+            fontWeight="600"
+            letterSpacing="widest"
+            textTransform="uppercase"
+          >
+            Portfolio
+          </Text>
+          
+          <Text
+            fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+            fontWeight="800"
             color="gray.900"
             _dark={{ color: "white" }}
             textAlign="center"
+            lineHeight="1.2"
           >
             Featured Projects
           </Text>
           
           <Text
-            fontSize={{ base: "md", md: "lg" }}
+            fontSize={{ base: "lg", md: "xl" }}
             color="gray.600"
             _dark={{ color: "gray.400" }}
             textAlign="center"
-            maxW="600px"
-            px={{ base: 4, md: 0 }}
+            maxW="700px"
+            lineHeight="1.7"
           >
-            A collection of projects that showcase my skills and experience
+            A showcase of my recent work, featuring modern web applications built with cutting-edge technologies
           </Text>
         </VStack>
 
         {/* Filter Buttons */}
         <Flex justify="center" px={{ base: 4, md: 0 }}>
           <ButtonGroup 
-            spacing={2} 
+            spacing={2}
             size={{ base: "sm", md: "md" }}
             isAttached={{ base: false, md: false }}
             flexWrap="wrap"
@@ -363,14 +415,11 @@ const Projects = () => {
         </Flex>
 
         {/* Projects Grid */}
-        <Box w="full" px={{ base: 4, md: 0 }}>
+       <Box w="full">
           <SimpleGrid
-            key={activeFilter}
-            columns={{ base: 1, sm: 1, md: 2, lg: 3 }}
-            spacing={{ base: 6, md: 8 }}
+            columns={{ base: 1, md: 2, lg: 3 }}
+            spacing={8}
             w="full"
-            justifyItems="center"
-            alignItems="start"
           >
             {filteredProjects.map((project, index) => (
               <ProjectCard
@@ -385,8 +434,9 @@ const Projects = () => {
             <Text
               textAlign="center"
               color="gray.500"
-              fontSize="lg"
-              py={12}
+              fontSize="xl"
+              py={16}
+              fontWeight="500"
             >
               No projects found for this category
             </Text>

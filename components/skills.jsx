@@ -7,12 +7,10 @@ import {
   HStack,
   SimpleGrid,
   Container,
-  Divider,
   Image,
   Collapse,
   Button,
   useColorModeValue,
-  useMediaQuery,
 } from "@chakra-ui/react";
 import { motion } from "framer-motion";
 import { AppWrap } from "@/Wrapper";
@@ -22,46 +20,54 @@ import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
 
 const MotionBox = motion(Box);
 
-// Subtle animations for professional feel
-const staggerChildren = {
-  animate: {
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
     transition: {
-      staggerChildren: 0.1
+      staggerChildren: 0.05
     }
   }
 };
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, ease: "easeOut" }
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.4,
+      ease: "easeOut"
+    }
+  }
 };
 
-const SkillCard = ({ skill, index }) => {
+const SkillCard = ({ skill }) => {
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
+  const hoverBg = useColorModeValue("gray.50", "gray.750");
 
   return (
     <MotionBox
-      variants={fadeInUp}
-      custom={index}
+      variants={itemVariants}
       bg={cardBg}
-      p={6}
+      p={5}
       borderRadius="xl"
       border="1px"
       borderColor={borderColor}
-      boxShadow="md"
+      boxShadow="sm"
       _hover={{
-        transform: "translateY(-2px)",
-        boxShadow: "lg",
+        transform: "translateY(-4px)",
+        boxShadow: "md",
+        bg: hoverBg,
       }}
       transition="all 0.2s ease-in-out"
       textAlign="center"
     >
-      <VStack spacing={4}>
+      <VStack spacing={3}>
         <Box
-          w="60px"
-          h="60px"
+          w="56px"
+          h="56px"
           borderRadius="lg"
           overflow="hidden"
           bg="gray.50"
@@ -83,7 +89,7 @@ const SkillCard = ({ skill, index }) => {
         
         <Text
           fontSize="sm"
-          fontWeight="medium"
+          fontWeight="600"
           color="gray.700"
           _dark={{ color: "gray.300" }}
         >
@@ -94,39 +100,52 @@ const SkillCard = ({ skill, index }) => {
   );
 };
 
-const ExperienceCard = ({ experience, index }) => {
+const ExperienceCard = ({ experience }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
 
   return (
     <MotionBox
-      variants={fadeInUp}
-      custom={index}
+      variants={itemVariants}
       bg={cardBg}
       border="1px"
       borderColor={borderColor}
-      borderRadius="xl"
+      borderRadius="2xl"
       overflow="hidden"
       boxShadow="md"
+      _hover={{
+        boxShadow: "lg",
+      }}
+      transition="all 0.2s"
+      minW={{ base: "full", md: "600px" }}
     >
       <VStack align="stretch" spacing={0}>
         {experience.works?.map((work, workIndex) => (
-          <Box key={work._key} p={6} borderBottomWidth={workIndex < experience.works.length - 1 ? "1px" : 0}>
-            <HStack align="start" spacing={6}>
-              {/* Year */}
+          <Box 
+            key={work._key} 
+            p={6} 
+            borderBottomWidth={workIndex < experience.works.length - 1 ? "1px" : 0}
+            borderColor={borderColor}
+          >
+            <Flex 
+              direction={{ base: "column", md: "row" }}
+              align={{ base: "start", md: "start" }}
+              gap={6}
+            >
+              {/* Year Badge */}
               <Box
-                minW="80px"
+                minW={{ base: "full", md: "100px" }}
                 bg="blue.50"
                 _dark={{ bg: "blue.900" }}
-                px={3}
+                px={4}
                 py={2}
-                borderRadius="lg"
+                borderRadius="xl"
                 textAlign="center"
               >
                 <Text
-                  fontSize="sm"
-                  fontWeight="bold"
+                  fontSize="md"
+                  fontWeight="700"
                   color="blue.600"
                   _dark={{ color: "blue.300" }}
                 >
@@ -138,8 +157,8 @@ const ExperienceCard = ({ experience, index }) => {
               <VStack align="start" spacing={3} flex={1}>
                 <VStack align="start" spacing={1}>
                   <Text
-                    fontSize="lg"
-                    fontWeight="bold"
+                    fontSize="xl"
+                    fontWeight="700"
                     color="gray.900"
                     _dark={{ color: "white" }}
                   >
@@ -147,9 +166,9 @@ const ExperienceCard = ({ experience, index }) => {
                   </Text>
                   <Text
                     fontSize="md"
-                    color="gray.600"
-                    _dark={{ color: "gray.400" }}
-                    fontWeight="medium"
+                    color="blue.600"
+                    _dark={{ color: "blue.400" }}
+                    fontWeight="600"
                   >
                     {work.company}
                   </Text>
@@ -157,35 +176,34 @@ const ExperienceCard = ({ experience, index }) => {
 
                 {work.desc && (
                   <Box w="full">
+                    <Collapse in={isExpanded} animateOpacity startingHeight={0}>
+                      <Text
+                        mt={2}
+                        fontSize="sm"
+                        color="gray.600"
+                        _dark={{ color: "gray.400" }}
+                        lineHeight="1.7"
+                      >
+                        {work.desc}
+                      </Text>
+                    </Collapse>
+                    
                     <Button
                       size="sm"
                       variant="ghost"
                       rightIcon={isExpanded ? <ChevronUpIcon /> : <ChevronDownIcon />}
                       onClick={() => setIsExpanded(!isExpanded)}
-                      p={0}
-                      h="auto"
-                      fontWeight="medium"
+                      mt={2}
+                      fontWeight="600"
                       color="blue.600"
-                      _dark={{ color: "blue.300" }}
+                      _dark={{ color: "blue.400" }}
                     >
                       {isExpanded ? "Show Less" : "Show More"}
                     </Button>
-                    
-                    <Collapse in={isExpanded} animateOpacity>
-                      <Text
-                        mt={3}
-                        fontSize="sm"
-                        color="gray.600"
-                        _dark={{ color: "gray.400" }}
-                        lineHeight="tall"
-                      >
-                        {work.desc}
-                      </Text>
-                    </Collapse>
                   </Box>
                 )}
               </VStack>
-            </HStack>
+            </Flex>
           </Box>
         ))}
       </VStack>
@@ -195,112 +213,125 @@ const ExperienceCard = ({ experience, index }) => {
 
 const Skills = () => {
   const { skill, experience } = useContext(UserContext);
-  const [isLargerThan768] = useMediaQuery("(min-width: 768px)");
 
   return (
-    <Container maxW="7xl" py={{ base: 16, md: 24 }}>
-      <VStack spacing={16} align="stretch">
-        {/* Header */}
-        <VStack spacing={6}>
-          <Text
-            fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
-            fontWeight="bold"
-            color="gray.900"
-            _dark={{ color: "white" }}
-            textAlign="center"
-          >
-            Skills & Experience
-          </Text>
-          
-          <Text
-            fontSize="lg"
-            color="gray.600"
-            _dark={{ color: "gray.400" }}
-            textAlign="center"
-            maxW="600px"
-          >
-            Technologies I work with and my professional journey
-          </Text>
-        </VStack>
-
-        <Flex
-          direction={{ base: "column", lg: "row" }}
-          gap={16}
-          align="stretch"
-        >
-          {/* Skills Section */}
-          <VStack spacing={8} flex={1}>
+    <Container maxW="7xl" py={{ base: 8, md: 32 }}>
+      <VStack spacing={20} align="stretch">
+        {/* Skills Section */}
+        <VStack spacing={12} align="stretch">
+          {/* Header */}
+          <VStack spacing={6}>
             <Text
-              fontSize="2xl"
-              fontWeight="bold"
+              fontSize={{ base: "xs", md: "sm" }}
+              color="blue.600"
+              _dark={{ color: "blue.400" }}
+              fontWeight="600"
+              letterSpacing="widest"
+              textTransform="uppercase"
+            >
+              Technologies
+            </Text>
+            
+            <Text
+              fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+              fontWeight="800"
               color="gray.900"
               _dark={{ color: "white" }}
               textAlign="center"
+              lineHeight="1.2"
             >
               Technical Skills
             </Text>
             
-            <MotionBox
-              variants={staggerChildren}
-              initial="initial"
-              whileInView="animate"
-              viewport={{ once: true, margin: "-100px" }}
+            <Text
+              fontSize={{ base: "lg", md: "xl" }}
+              color="gray.600"
+              _dark={{ color: "gray.400" }}
+              textAlign="center"
+              maxW="700px"
+              lineHeight="1.7"
+            >
+              I work with modern technologies and frameworks to build scalable, performant applications
+            </Text>
+          </VStack>
+          
+          {/* Skills Grid */}
+          <MotionBox
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+          >
+            <SimpleGrid
+              columns={{ base: 3, sm: 4, md: 5, lg: 6 }}
+              spacing={4}
               w="full"
             >
-              <SimpleGrid
-                columns={{ base: 3, md: 4, lg: 3, xl: 4 }}
-                spacing={4}
-                w="full"
-              >
-                {skill?.map((skillItem, index) => (
-                  <SkillCard
-                    key={skillItem._id}
-                    skill={skillItem}
-                    index={index}
-                  />
-                ))}
-              </SimpleGrid>
-            </MotionBox>
-          </VStack>
+              {skill?.map((skillItem) => (
+                <SkillCard
+                  key={skillItem._id}
+                  skill={skillItem}
+                />
+              ))}
+            </SimpleGrid>
+          </MotionBox>
+        </VStack>
 
-          {/* Divider */}
-          <Divider
-            orientation={isLargerThan768 ? "vertical" : "horizontal"}
-            borderColor="gray.300"
-            _dark={{ borderColor: "gray.600" }}
-          />
-
-          {/* Experience Section */}
-          <VStack spacing={8} flex={1}>
+        {/* Experience Section */}
+        <VStack spacing={12} align="stretch">
+          {/* Header */}
+          <VStack spacing={6}>
             <Text
-              fontSize="2xl"
-              fontWeight="bold"
+              fontSize={{ base: "xs", md: "sm" }}
+              color="blue.600"
+              _dark={{ color: "blue.400" }}
+              fontWeight="600"
+              letterSpacing="widest"
+              textTransform="uppercase"
+            >
+              Career
+            </Text>
+            
+            <Text
+              fontSize={{ base: "3xl", md: "4xl", lg: "5xl" }}
+              fontWeight="800"
               color="gray.900"
               _dark={{ color: "white" }}
               textAlign="center"
+              lineHeight="1.2"
             >
               Work Experience
             </Text>
             
-            <MotionBox
-              variants={staggerChildren}
-              initial="initial"
-              whileInView="animate"
-              viewport={{ once: true, margin: "-100px" }}
-              w="full"
+            <Text
+              fontSize={{ base: "lg", md: "xl" }}
+              color="gray.600"
+              _dark={{ color: "gray.400" }}
+              textAlign="center"
+              maxW="700px"
+              lineHeight="1.7"
             >
-              <VStack spacing={6} w="full">
-                {experience?.map((exp, index) => (
-                  <ExperienceCard
-                    key={exp._id}
-                    experience={exp}
-                    index={index}
-                  />
-                ))}
-              </VStack>
-            </MotionBox>
+              My professional journey building impactful applications
+            </Text>
           </VStack>
-        </Flex>
+          
+          {/* Experience Timeline */}
+          <MotionBox
+            variants={containerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-50px" }}
+          >
+            <VStack spacing={6} w="full" maxW="900px" mx="auto">
+              {experience?.map((exp) => (
+                <ExperienceCard
+                  key={exp._id}
+                  experience={exp}
+                />
+              ))}
+            </VStack>
+          </MotionBox>
+        </VStack>
       </VStack>
     </Container>
   );

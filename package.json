@@ -28,5 +28,8 @@
     "react-horizontal-scrolling-menu": "^3.2.3",
     "react-icons": "^4.7.1",
     "styled-components": "^5.3.6"
+  },
+  "devDependencies": {
+    "@types/three": "^0.180.0"
   }
 }
