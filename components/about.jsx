@@ -38,7 +38,7 @@ const About = () => {
   const { title, subtitle, description, imgUrl, resume } = aboutData;
 
   return (
-    <Container maxW="7xl" py={{ base: 16, md: 32 }}>
+    <Container maxW="7xl" py={{ base: 16, md: 20 }}>
       <Flex
         direction={{ base: "column", lg: "row" }}
         align="center"
