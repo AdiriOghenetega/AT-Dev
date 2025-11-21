@@ -4,6 +4,7 @@ import About from '@/components/about';
 import Skills from "@/components/skills";
 import Services from "@/components/services";
 import Projects from "@/components/projects";
+import Articles from '@/components/articles';
 import Contact from "@/components/contact";
 import { createClient } from "next-sanity";
 import imageUrlBuilder from '@sanity/image-url';
@@ -27,8 +28,8 @@ const Home = ({ about, skill, experience, work }) => {
       <Flex direction="column" bgImage="url('/longAnimated.svg')">
         <About />
         <Skills />
-        <Services />
         <Projects />
+        <Articles />
         <Contact />
       </Flex>
     </UserContext.Provider>
