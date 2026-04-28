@@ -42,6 +42,16 @@ const itemVariants = {
   }
 };
 
+const getExperienceSortMeta = (yearText = "") => {
+  const years = yearText.match(/\d{4}/g)?.map(Number) || [];
+  const hasCurrent = /current|present|now/i.test(yearText);
+
+  const startYear = years[0] || 0;
+  const endYear = hasCurrent ? 9999 : (years[1] || years[0] || 0);
+
+  return { endYear, startYear };
+};
+
 const SkillCard = ({ skill }) => {
   const cardBg = useColorModeValue("white", "gray.800");
   const borderColor = useColorModeValue("gray.200", "gray.700");
@@ -213,6 +223,16 @@ const ExperienceCard = ({ experience }) => {
 
 const Skills = () => {
   const { skill, experience } = useContext(UserContext);
+  const sortedExperience = [...(experience || [])].sort((a, b) => {
+    const aMeta = getExperienceSortMeta(a?.year);
+    const bMeta = getExperienceSortMeta(b?.year);
+
+    if (bMeta.endYear !== aMeta.endYear) {
+      return bMeta.endYear - aMeta.endYear;
+    }
+
+    return bMeta.startYear - aMeta.startYear;
+  });
 
   return (
     <Container maxW="7xl" py={{ base: 8, md: 32 }}>
@@ -323,7 +343,7 @@ const Skills = () => {
             viewport={{ once: true, margin: "-50px" }}
           >
             <VStack spacing={6} w="full" maxW="900px" mx="auto">
-              {experience?.map((exp) => (
+              {sortedExperience.map((exp) => (
                 <ExperienceCard
                   key={exp._id}
                   experience={exp}

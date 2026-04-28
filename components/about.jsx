@@ -142,7 +142,7 @@ const About = () => {
                   color="blue.600"
                   _dark={{ color: "blue.400" }}
                 >
-                  5+
+                  6+
                 </Text>
                 <Text fontSize="sm" color="gray.600" _dark={{ color: "gray.400" }}>
                   Years Experience
