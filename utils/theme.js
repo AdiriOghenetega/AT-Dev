@@ -7,6 +7,15 @@ const config = {
 }
 
 // extend the theme
-const theme = extendTheme({ config })
+const theme = extendTheme({
+  config,
+  components: {
+    Container: {
+      baseStyle: {
+        px: { base: 4, md: 8, lg: 16, xl: 20 },
+      },
+    },
+  },
+})
 
 export default theme
